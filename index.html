@@ -23,7 +23,6 @@
           0 2px 20px rgba(26, 58, 92, 0.08), 0 1px 4px rgba(26, 58, 92, 0.04);
         --radius: 14px;
       }
-
       *,
       *::before,
       *::after {
@@ -31,7 +30,6 @@
         margin: 0;
         padding: 0;
       }
-
       body {
         font-family: "DM Sans", sans-serif;
         background: var(--bg);
@@ -42,8 +40,6 @@
         align-items: center;
         padding: 20px 16px 60px;
       }
-
-      /* ─── HEADER ─── */
       .app-header {
         width: 100%;
         max-width: 680px;
@@ -74,8 +70,6 @@
         padding: 4px 10px;
         border-radius: 99px;
       }
-
-      /* ─── CARD ─── */
       .card {
         background: var(--surface);
         border-radius: var(--radius);
@@ -96,15 +90,12 @@
           transform: translateY(0);
         }
       }
-
-      /* ─── IDENTITY SCREEN ─── */
       .screen {
         display: none;
       }
       .screen.active {
         display: block;
       }
-
       .identity-title {
         font-family: "DM Serif Display", serif;
         font-size: 1.9rem;
@@ -127,6 +118,9 @@
       @media (max-width: 480px) {
         .field-group {
           grid-template-columns: 1fr;
+        }
+        .card {
+          padding: 24px 20px;
         }
       }
       .field label {
@@ -169,8 +163,6 @@
       .rules strong {
         font-weight: 600;
       }
-
-      /* ─── BUTTONS ─── */
       .btn {
         display: inline-flex;
         align-items: center;
@@ -220,8 +212,6 @@
         cursor: not-allowed;
         pointer-events: none;
       }
-
-      /* ─── EXAM HEADER ─── */
       .exam-topbar {
         display: flex;
         justify-content: space-between;
@@ -237,7 +227,6 @@
       .student-name strong {
         color: var(--text);
       }
-
       .timer {
         font-family: "DM Serif Display", serif;
         font-size: 1.6rem;
@@ -264,8 +253,6 @@
           opacity: 0.6;
         }
       }
-
-      /* ─── PROGRESS BAR ─── */
       .progress-block {
         margin-bottom: 24px;
       }
@@ -325,8 +312,6 @@
         border-color: var(--accent2);
         color: #fff;
       }
-
-      /* ─── QUESTION ─── */
       .question-number {
         font-size: 0.75rem;
         font-weight: 600;
@@ -398,8 +383,6 @@
         line-height: 1.45;
         padding-top: 2px;
       }
-
-      /* ─── NAV ─── */
       .nav-row {
         display: flex;
         justify-content: space-between;
@@ -409,8 +392,6 @@
       .nav-center {
         text-align: center;
       }
-
-      /* ─── RESULTS ─── */
       .score-hero {
         text-align: center;
         padding: 10px 0 30px;
@@ -448,7 +429,6 @@
         font-size: 0.88rem;
         color: var(--muted);
       }
-
       .results-list {
         margin-top: 24px;
         display: flex;
@@ -494,8 +474,6 @@
       .result-detail s {
         color: var(--accent2);
       }
-
-      /* ─── STATUS TOAST ─── */
       .toast {
         position: fixed;
         bottom: 24px;
@@ -515,7 +493,6 @@
       .toast.show {
         transform: translateX(-50%) translateY(0);
       }
-
       .submit-note {
         text-align: center;
         font-size: 0.78rem;
@@ -556,23 +533,19 @@
     </style>
   </head>
   <body>
-    <!-- ══ HEADER ══ -->
     <header class="app-header">
       <div class="logo">SESAME <span>·</span> Exam</div>
       <div class="tag">Compétences Digitales</div>
     </header>
 
-    <!-- ══════════════════════════════════
-     SCREEN 1 — IDENTITÉ
-══════════════════════════════════════ -->
+    <!-- SCREEN 1 — IDENTITÉ -->
     <div id="screen-identity" class="screen active">
       <div class="card">
         <h1 class="identity-title">Simulation<br />d'examen</h1>
         <p class="identity-sub">
-          Concours SESAME — Séquence 1 : Compétences Digitales<br />Répondez à
-          20 questions en 20 minutes.
+          Concours SESAME — Compétences Digitales<br />Répondez à 20 questions
+          en 20 minutes.
         </p>
-
         <div class="field-group">
           <div class="field">
             <label>Prénom</label>
@@ -593,14 +566,12 @@
             />
           </div>
         </div>
-
         <div class="rules">
           <strong>Règles :</strong> 20 questions · 1 seule bonne réponse ·
           <strong>20 minutes</strong> au total.<br />
           Vous pouvez naviguer librement entre les questions. Le test se soumet
           automatiquement à 0:00.
         </div>
-
         <button class="btn btn-primary" onclick="startExam()">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
@@ -610,18 +581,13 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════
-     SCREEN 2 — EXAM
-══════════════════════════════════════ -->
+    <!-- SCREEN 2 — EXAM -->
     <div id="screen-exam" class="screen">
       <div class="card">
         <div class="exam-topbar">
-          <div class="student-name">
-            <strong id="display-name">—</strong>
-          </div>
+          <div class="student-name"><strong id="display-name">—</strong></div>
           <div class="timer" id="timer-display">20:00</div>
         </div>
-
         <div class="progress-block">
           <div class="progress-info">
             <span id="progress-text">Question 1 / 20</span>
@@ -636,11 +602,9 @@
           </div>
           <div class="answered-dots" id="dots-container"></div>
         </div>
-
         <div class="question-number" id="q-number">Question 01</div>
         <div class="question-text" id="q-text">Chargement…</div>
         <div class="choices" id="q-choices"></div>
-
         <div class="nav-row">
           <button
             class="btn btn-secondary"
@@ -675,9 +639,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════════════
-     SCREEN 3 — RÉSULTATS
-══════════════════════════════════════ -->
+    <!-- SCREEN 3 — RÉSULTATS -->
     <div id="screen-results" class="screen">
       <div class="card">
         <div class="score-hero">
@@ -688,9 +650,7 @@
           <div class="score-msg" id="res-msg">—</div>
           <div class="score-sub" id="res-sub">—</div>
         </div>
-
         <div class="results-list" id="results-list"></div>
-
         <div style="text-align: center; margin-top: 28px">
           <button class="btn btn-secondary" onclick="location.reload()">
             Recommencer
@@ -699,86 +659,89 @@
       </div>
     </div>
 
-    <!-- Overlay envoi -->
     <div class="sending-overlay" id="sending-overlay">
       <div class="spinner"></div>
       Enregistrement des résultats…
     </div>
-
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
-      // ════════════════════════════════════════════════════════
-      //  ⚙️  CONFIGURATION — à modifier par l'enseignant
-      // ════════════════════════════════════════════════════════
-
-      // 👉 Collez ici l'URL de votre Google Apps Script Web App après déploiement
+      // ══════════════════════════════════════════════
+      //  CONFIGURATION
+      // ══════════════════════════════════════════════
       const GOOGLE_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
-
-      // Durée de l'examen en secondes (20 min = 1200)
       const EXAM_DURATION = 20 * 60;
 
-      // ════════════════════════════════════════════════════════
-      //  📋  QUESTIONS
-      //  Format : { q, choices: [{l, t}], answer: "a"|"b"|"c"|"d" }
-      //  ⚠️  Q1–Q5 et Q11–Q14 = PLACEHOLDERS → à compléter !
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
+      //  QUESTIONS
+      // ══════════════════════════════════════════════
       const QUESTIONS = [
-        // ── Q1 à Q5 : À COMPLÉTER ─────────────────────────────
+        // Q1
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 1.",
+          q: "Dans un tableur, la cellule A1 contient 200 et la cellule A2 contient 50. Quelle formule affiche le pourcentage que représente A2 par rapport à A1 ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            { l: "A", t: "=A1/A2*100" },
+            { l: "B", t: "=A2-A1" },
+            { l: "C", t: "=A2/A1*100" },
+            { l: "D", t: "=A1*A2/100" },
           ],
-          answer: "a", // ← mettre la lettre correcte (a/b/c/d)
+          answer: "c",
         },
+        // Q2
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 2.",
+          q: "Quelle est la différence entre « Enregistrer » et « Enregistrer sous » dans un traitement de texte ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            {
+              l: "A",
+              t: "« Enregistrer » crée une copie du fichier, « Enregistrer sous » met à jour l'original.",
+            },
+            {
+              l: "B",
+              t: "« Enregistrer » met à jour le fichier existant, « Enregistrer sous » crée un nouveau fichier ou change l'emplacement.",
+            },
+            { l: "C", t: "Les deux fonctions font exactement la même chose." },
+            {
+              l: "D",
+              t: "« Enregistrer sous » supprime l'ancienne version du fichier automatiquement.",
+            },
           ],
-          answer: "a",
+          answer: "b",
         },
+        // Q3
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 3.",
+          q: "Quel format de fichier est le plus adapté pour partager un document dont on veut préserver la mise en forme et empêcher les modifications faciles ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            { l: "A", t: ".docx" },
+            { l: "B", t: ".txt" },
+            { l: "C", t: ".xlsx" },
+            { l: "D", t: ".pdf" },
           ],
-          answer: "a",
+          answer: "d",
         },
+        // Q4
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 4.",
+          q: "Dans un moteur de recherche, quel opérateur permet de chercher une expression exacte ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            { l: "A", t: "Des parenthèses : (intelligence artificielle)" },
+            { l: "B", t: 'Des guillemets : "intelligence artificielle"' },
+            { l: "C", t: "Un astérisque : *intelligence artificielle*" },
+            { l: "D", t: "Un signe plus : +intelligence artificielle" },
           ],
-          answer: "a",
+          answer: "b",
         },
+        // Q5
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 5.",
+          q: "Dans un tableur, les cellules C2 à C6 contiennent les valeurs 8, 12, 5, 15, 10. Que retourne la formule =MAX(C2:C6) ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            { l: "A", t: "10" },
+            { l: "B", t: "50" },
+            { l: "C", t: "15" },
+            { l: "D", t: "12" },
           ],
-          answer: "a",
+          answer: "c",
         },
-
-        // ── Q6 ────────────────────────────────────────────────
+        // Q6
         {
           q: "Soit la feuille suivante dans un tableur (colonne A = NOM, colonne B = NOTE). Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",
           choices: [
@@ -789,7 +752,7 @@
           ],
           answer: "d",
         },
-        // ── Q7 ────────────────────────────────────────────────
+        // Q7
         {
           q: "Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",
           choices: [
@@ -809,7 +772,7 @@
           ],
           answer: "c",
         },
-        // ── Q8 ────────────────────────────────────────────────
+        // Q8
         {
           q: "Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",
           choices: [
@@ -820,7 +783,7 @@
           ],
           answer: "c",
         },
-        // ── Q9 ────────────────────────────────────────────────
+        // Q9
         {
           q: "Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",
           choices: [
@@ -831,7 +794,7 @@
           ],
           answer: "d",
         },
-        // ── Q10 ───────────────────────────────────────────────
+        // Q10
         {
           q: "Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",
           choices: [
@@ -842,50 +805,99 @@
           ],
           answer: "a",
         },
-
-        // ── Q11 à Q14 : À COMPLÉTER ───────────────────────────
+        // Q11
         {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 11.",
+          q: "Qu'est-ce que le « droit à l'oubli » sur Internet ?",
           choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
+            {
+              l: "A",
+              t: "Le droit de supprimer son compte sur n'importe quel réseau social sans justification.",
+            },
+            {
+              l: "B",
+              t: "Le droit de ne pas être photographié dans un lieu public.",
+            },
+            {
+              l: "C",
+              t: "Le droit de demander la suppression de ses données personnelles auprès d'un service en ligne.",
+            },
+            {
+              l: "D",
+              t: "Le droit d'accéder anonymement à tous les services en ligne sans créer de compte.",
+            },
+          ],
+          answer: "c",
+        },
+        // Q12
+        {
+          q: "Qu'est-ce qu'un mot de passe fort ?",
+          choices: [
+            {
+              l: "A",
+              t: "Un mot de passe composé uniquement de lettres minuscules facile à retenir.",
+            },
+            {
+              l: "B",
+              t: "Un mot de passe combinant majuscules, minuscules, chiffres et caractères spéciaux d'au moins 12 caractères.",
+            },
+            {
+              l: "C",
+              t: "Un mot de passe identique sur tous vos comptes pour ne pas l'oublier.",
+            },
+            {
+              l: "D",
+              t: "Un mot de passe composé de votre prénom suivi de votre année de naissance.",
+            },
+          ],
+          answer: "b",
+        },
+        // Q13
+        {
+          q: "Qu'est-ce que le phishing (hameçonnage) ?",
+          choices: [
+            {
+              l: "A",
+              t: "Une technique de compression de fichiers pour les envoyer par email.",
+            },
+            {
+              l: "B",
+              t: "Un logiciel permettant de filtrer les spams dans une boîte mail.",
+            },
+            {
+              l: "C",
+              t: "Un virus qui chiffre les fichiers de l'ordinateur et demande une rançon.",
+            },
+            {
+              l: "D",
+              t: "Une tentative frauduleuse d'obtenir des informations personnelles en se faisant passer pour une entité de confiance.",
+            },
+          ],
+          answer: "d",
+        },
+        // Q14
+        {
+          q: "Parmi ces propositions, laquelle décrit le mieux le rôle d'un système d'exploitation ?",
+          choices: [
+            {
+              l: "A",
+              t: "Gérer les ressources matérielles et logicielles de l'ordinateur et faire l'interface entre l'utilisateur et la machine.",
+            },
+            {
+              l: "B",
+              t: "Permettre uniquement la connexion à Internet et la navigation sur le web.",
+            },
+            {
+              l: "C",
+              t: "Créer et modifier des documents texte, des tableurs et des présentations.",
+            },
+            {
+              l: "D",
+              t: "Protéger l'ordinateur contre les virus et les logiciels malveillants.",
+            },
           ],
           answer: "a",
         },
-        {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 12.",
-          choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
-          ],
-          answer: "a",
-        },
-        {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 13.",
-          choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
-          ],
-          answer: "a",
-        },
-        {
-          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 14.",
-          choices: [
-            { l: "A", t: "Réponse A — à compléter" },
-            { l: "B", t: "Réponse B — à compléter" },
-            { l: "C", t: "Réponse C — à compléter" },
-            { l: "D", t: "Réponse D — à compléter" },
-          ],
-          answer: "a",
-        },
-
-        // ── Q15 ───────────────────────────────────────────────
+        // Q15
         {
           q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x après l'exécution de cet algorithme ?",
           choices: [
@@ -896,7 +908,7 @@
           ],
           answer: "b",
         },
-        // ── Q16 ───────────────────────────────────────────────
+        // Q16
         {
           q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 100, x = x + 5 ». Combien d'itérations sont nécessaires pour que l'algorithme s'arrête ?",
           choices: [
@@ -907,9 +919,9 @@
           ],
           answer: "a",
         },
-        // ── Q17 ───────────────────────────────────────────────
+        // Q17
         {
-          q: "Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x après l'exécution de cet algorithme si n = 4 ?",
+          q: "Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x si n = 4 ?",
           choices: [
             { l: "A", t: "i" },
             { l: "B", t: "4" },
@@ -918,7 +930,7 @@
           ],
           answer: "d",
         },
-        // ── Q18 ───────────────────────────────────────────────
+        // Q18
         {
           q: "Qu'est-ce qu'une bibliographie dans un document textuel ?",
           choices: [
@@ -938,7 +950,7 @@
           ],
           answer: "b",
         },
-        // ── Q19 ───────────────────────────────────────────────
+        // Q19
         {
           q: "Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",
           choices: [
@@ -952,7 +964,7 @@
           ],
           answer: "d",
         },
-        // ── Q20 ───────────────────────────────────────────────
+        // Q20
         {
           q: "Qu'est-ce qu'une infographie ?",
           choices: [
@@ -965,9 +977,9 @@
         },
       ];
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  STATE
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       let state = {
         prenom: "",
         nom: "",
@@ -975,13 +987,12 @@
         answers: new Array(QUESTIONS.length).fill(null),
         timerInterval: null,
         secondsLeft: EXAM_DURATION,
-        startTime: null,
         submitted: false,
       };
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  SCREENS
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       function showScreen(id) {
         document
           .querySelectorAll(".screen")
@@ -989,9 +1000,9 @@
         document.getElementById(id).classList.add("active");
       }
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  START
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       function startExam() {
         const p = document.getElementById("inp-prenom").value.trim();
         const n = document.getElementById("inp-nom").value.trim();
@@ -1001,7 +1012,6 @@
         }
         state.prenom = p;
         state.nom = n;
-        state.startTime = new Date();
         document.getElementById("display-name").textContent = `${p} ${n}`;
         buildDots();
         renderQuestion();
@@ -1009,9 +1019,9 @@
         showScreen("screen-exam");
       }
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  TIMER
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       function startTimer() {
         const el = document.getElementById("timer-display");
         state.timerInterval = setInterval(() => {
@@ -1030,9 +1040,9 @@
         }, 1000);
       }
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  DOTS
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       function buildDots() {
         const c = document.getElementById("dots-container");
         c.innerHTML = "";
@@ -1059,9 +1069,9 @@
         });
       }
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  RENDER QUESTION
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       function renderQuestion() {
         const i = state.currentQ;
         const q = QUESTIONS[i];
@@ -1070,14 +1080,11 @@
         document.getElementById("q-text").textContent = q.q;
         document.getElementById("progress-text").textContent =
           `Question ${i + 1} / ${QUESTIONS.length}`;
-
         const answered = state.answers.filter((a) => a !== null).length;
         document.getElementById("answered-count").textContent =
           `${answered} répondues`;
         document.getElementById("progress-fill").style.width =
           `${((i + 1) / QUESTIONS.length) * 100}%`;
-
-        // Choices
         const cc = document.getElementById("q-choices");
         cc.innerHTML = "";
         q.choices.forEach((ch) => {
@@ -1089,33 +1096,24 @@
           div.onclick = () => selectAnswer(ch.l.toLowerCase());
           cc.appendChild(div);
         });
-
-        // Nav buttons
         document.getElementById("btn-prev").disabled = i === 0;
         document.getElementById("btn-next").disabled =
           i === QUESTIONS.length - 1;
-
-        // Submit button
         const allAnswered = state.answers.every((a) => a !== null);
         document.getElementById("btn-submit").disabled = !allAnswered;
         document.getElementById("submit-note").textContent = allAnswered
           ? "Toutes les questions sont répondues !"
           : `${QUESTIONS.length - answered} question(s) sans réponse`;
-
         updateDots();
       }
 
-      // ════════════════════════════════════════════════════════
-      //  SELECT ANSWER
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
+      //  SELECT / NAVIGATE
+      // ══════════════════════════════════════════════
       function selectAnswer(letter) {
         state.answers[state.currentQ] = letter;
         renderQuestion();
       }
-
-      // ════════════════════════════════════════════════════════
-      //  NAVIGATION
-      // ════════════════════════════════════════════════════════
       function navigate(dir) {
         const next = state.currentQ + dir;
         if (next >= 0 && next < QUESTIONS.length) {
@@ -1124,60 +1122,43 @@
         }
       }
 
-      // ════════════════════════════════════════════════════════
-      //  SUBMIT CONFIRM
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
+      //  SUBMIT
+      // ══════════════════════════════════════════════
       function confirmSubmit() {
         const unanswered = state.answers.filter((a) => a === null).length;
         if (unanswered > 0) {
           showToast(`Il reste ${unanswered} question(s) sans réponse.`);
           return;
         }
-        if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?")) {
+        if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?"))
           submitExam(false);
-        }
       }
 
-      // ════════════════════════════════════════════════════════
-      //  SUBMIT
-      // ════════════════════════════════════════════════════════
       async function submitExam(timeUp) {
         if (state.submitted) return;
         state.submitted = true;
         clearInterval(state.timerInterval);
-
         const usedSeconds = EXAM_DURATION - state.secondsLeft;
         const mins = Math.floor(usedSeconds / 60);
         const secs = usedSeconds % 60;
         const tempsUtilise = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-
-        // Calcul score
         let score = 0;
         state.answers.forEach((ans, i) => {
           if (ans === QUESTIONS[i].answer) score++;
         });
-
-        // Prépare payload Google Sheets
-        const now = new Date();
-        const dateStr = now.toLocaleString("fr-FR");
         const payload = {
           nom: state.nom,
           prenom: state.prenom,
-          dateHeure: dateStr,
-          score: score,
+          dateHeure: new Date().toLocaleString("fr-FR"),
+          score,
           tempsUtilise,
           soumissionAutomatique: timeUp ? "OUI" : "NON",
         };
         QUESTIONS.forEach((_, i) => {
           payload[`Q${i + 1}`] = state.answers[i] || "—";
         });
-
-        // Envoi Google Apps Script
-        if (
-          GOOGLE_SCRIPT_URL &&
-          GOOGLE_SCRIPT_URL !==
-            "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec"
-        ) {
+        if (GOOGLE_SCRIPT_URL) {
           document.getElementById("sending-overlay").classList.add("show");
           try {
             await fetch(GOOGLE_SCRIPT_URL, {
@@ -1191,16 +1172,14 @@
           }
           document.getElementById("sending-overlay").classList.remove("show");
         }
-
         showResults(score, tempsUtilise, timeUp);
       }
 
-      // ════════════════════════════════════════════════════════
-      //  SHOW RESULTS
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
+      //  RESULTS
+      // ══════════════════════════════════════════════
       function showResults(score, temps, timeUp) {
         document.getElementById("res-score").textContent = score;
-
         let msg, sub;
         if (score >= 18) {
           msg = "Excellent ! Bravo !";
@@ -1215,47 +1194,42 @@
           msg = "Encore un effort !";
           sub = "Revoyez les notions fondamentales.";
         }
-
         if (timeUp) sub += " (temps écoulé — soumission automatique)";
         document.getElementById("res-msg").textContent = msg;
         document.getElementById("res-sub").textContent =
           `Score : ${score}/20 · Temps utilisé : ${temps}`;
-
         const list = document.getElementById("results-list");
         list.innerHTML = "";
         QUESTIONS.forEach((q, i) => {
           const userAns = state.answers[i] || "—";
           const correct = q.answer;
           const isOk = userAns === correct;
-
           const choiceText = (l) => {
             const c = q.choices.find((ch) => ch.l.toLowerCase() === l);
             return c ? `${c.l}. ${c.t}` : l;
           };
-
           const div = document.createElement("div");
           div.className = `result-item ${isOk ? "correct" : "wrong"}`;
           div.innerHTML = `
-      <div class="result-icon">${isOk ? "✓" : "✗"}</div>
-      <div>
-        <div class="result-q">Q${i + 1}. ${q.q.substring(0, 70)}${q.q.length > 70 ? "…" : ""}</div>
-        <div class="result-detail">
-          ${
-            isOk
-              ? `<em>${choiceText(correct)}</em>`
-              : `Votre réponse : <s>${choiceText(userAns)}</s> · Bonne réponse : <em>${choiceText(correct)}</em>`
-          }
-        </div>
-      </div>`;
+            <div class="result-icon">${isOk ? "✓" : "✗"}</div>
+            <div>
+              <div class="result-q">Q${i + 1}. ${q.q.substring(0, 70)}${q.q.length > 70 ? "…" : ""}</div>
+              <div class="result-detail">
+                ${
+                  isOk
+                    ? `<em>${choiceText(correct)}</em>`
+                    : `Votre réponse : <s>${choiceText(userAns)}</s> · Bonne réponse : <em>${choiceText(correct)}</em>`
+                }
+              </div>
+            </div>`;
           list.appendChild(div);
         });
-
         showScreen("screen-results");
       }
 
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       //  TOAST
-      // ════════════════════════════════════════════════════════
+      // ══════════════════════════════════════════════
       let toastTimer;
       function showToast(msg) {
         const t = document.getElementById("toast");
@@ -1265,77 +1239,15 @@
         toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
       }
 
-      // Enter key on name fields
       document.addEventListener("keydown", (e) => {
         if (
           e.key === "Enter" &&
           document
             .getElementById("screen-identity")
             .classList.contains("active")
-        ) {
+        )
           startExam();
-        }
       });
     </script>
-
-    <!--
-════════════════════════════════════════════════════════════════════════
-  📌 GUIDE DE DÉPLOIEMENT — Google Apps Script
-════════════════════════════════════════════════════════════════════════
-
-ÉTAPE 1 — Créez un Google Sheet
-  1. Ouvrez drive.google.com → Nouveau → Google Sheets
-  2. Nommez-le "SESAME Résultats"
-
-ÉTAPE 2 — Créez le Apps Script
-  1. Dans le Sheet → Extensions → Apps Script
-  2. Supprimez tout le code existant
-  3. Collez ce code :
-
------------------------------------------------------------------
-function doPost(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const data  = JSON.parse(e.postData.contents);
-
-  // En-têtes si première ligne vide
-  if (sheet.getLastRow() === 0) {
-    const headers = ["Nom","Prénom","Date/Heure","Score/20","Temps utilisé","Soumission auto"];
-    for (let i = 1; i <= 20; i++) headers.push(`Q${i}`);
-    sheet.appendRow(headers);
-  }
-
-  const row = [
-    data.nom, data.prenom, data.dateHeure, data.score,
-    data.tempsUtilise, data.soumissionAutomatique
-  ];
-  for (let i = 1; i <= 20; i++) row.push(data[`Q${i}`] || "—");
-  sheet.appendRow(row);
-
-  return ContentService
-    .createTextOutput(JSON.stringify({status:"ok"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
------------------------------------------------------------------
-
-ÉTAPE 3 — Déployez en Web App
-  1. Cliquez "Déployer" → "Nouveau déploiement"
-  2. Type : Web App
-  3. Exécuter en tant que : Moi
-  4. Accès : Tout le monde (anonyme)
-  5. Déployer → copiez l'URL
-
-ÉTAPE 4 — Collez l'URL dans ce fichier HTML
-  Remplacez "VOTRE_URL_ICI" par l'URL copiée :
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec";
-
-ÉTAPE 5 — Hébergement statique
-  Option A — GitHub Pages :
-    1. Créez un repo GitHub → uploadez ce fichier → Settings → Pages → main branch
-  Option B — Netlify :
-    1. netlify.com → "Deploy manually" → glissez-déposez le fichier
-  Option C — Lien direct : partagez simplement le fichier (fonctionne en local aussi)
-
-════════════════════════════════════════════════════════════════════════
--->
   </body>
 </html>
