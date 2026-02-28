@@ -1,0 +1,1341 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SESAME — Simulation Compétences Digitales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f2eb;
+        --surface: #fffefb;
+        --accent: #1a3a5c;
+        --accent2: #e8533a;
+        --accent3: #2e8b6e;
+        --text: #1c1c1e;
+        --muted: #6b6b6b;
+        --border: #ddd8cc;
+        --card-shadow:
+          0 2px 20px rgba(26, 58, 92, 0.08), 0 1px 4px rgba(26, 58, 92, 0.04);
+        --radius: 14px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 16px 60px;
+      }
+
+      /* ─── HEADER ─── */
+      .app-header {
+        width: 100%;
+        max-width: 680px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 0 28px;
+        border-bottom: 1.5px solid var(--border);
+        margin-bottom: 36px;
+      }
+      .logo {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.5rem;
+        color: var(--accent);
+        letter-spacing: -0.5px;
+      }
+      .logo span {
+        color: var(--accent2);
+        font-style: italic;
+      }
+      .tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        background: var(--border);
+        padding: 4px 10px;
+        border-radius: 99px;
+      }
+
+      /* ─── CARD ─── */
+      .card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: var(--card-shadow);
+        padding: 36px 40px;
+        width: 100%;
+        max-width: 680px;
+        border: 1px solid var(--border);
+        animation: fadeUp 0.45s cubic-bezier(0.22, 0.68, 0, 1.2) both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ─── IDENTITY SCREEN ─── */
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+
+      .identity-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.9rem;
+        color: var(--accent);
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+      .identity-sub {
+        color: var(--muted);
+        font-size: 0.92rem;
+        margin-bottom: 32px;
+        line-height: 1.5;
+      }
+      .field-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      @media (max-width: 480px) {
+        .field-group {
+          grid-template-columns: 1fr;
+        }
+      }
+      .field label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .field input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .field input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.1);
+      }
+      .rules {
+        background: rgba(26, 58, 92, 0.05);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 8px 8px 0;
+        padding: 14px 16px;
+        font-size: 0.88rem;
+        color: var(--accent);
+        margin-bottom: 28px;
+        line-height: 1.6;
+      }
+      .rules strong {
+        font-weight: 600;
+      }
+
+      /* ─── BUTTONS ─── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 26px;
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s,
+          opacity 0.15s;
+        text-decoration: none;
+      }
+      .btn:active {
+        transform: scale(0.97);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 3px 12px rgba(26, 58, 92, 0.3);
+      }
+      .btn-primary:hover {
+        box-shadow: 0 6px 20px rgba(26, 58, 92, 0.35);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 1.5px solid var(--border);
+      }
+      .btn-secondary:hover {
+        background: rgba(26, 58, 92, 0.04);
+      }
+      .btn-danger {
+        background: var(--accent2);
+        color: #fff;
+        box-shadow: 0 3px 12px rgba(232, 83, 58, 0.3);
+      }
+      .btn-danger:hover {
+        box-shadow: 0 6px 20px rgba(232, 83, 58, 0.35);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* ─── EXAM HEADER ─── */
+      .exam-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .student-name {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .student-name strong {
+        color: var(--text);
+      }
+
+      .timer {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.6rem;
+        color: var(--accent);
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .timer.warning {
+        color: #c0700a;
+        animation: pulse 1s infinite;
+      }
+      .timer.danger {
+        color: var(--accent2);
+        animation: pulse 0.5s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      /* ─── PROGRESS BAR ─── */
+      .progress-block {
+        margin-bottom: 24px;
+      }
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .progress-bar {
+        height: 5px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), #2e7bb8);
+        border-radius: 99px;
+        transition: width 0.4s ease;
+      }
+      .answered-dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+      }
+      .dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+        font-weight: 600;
+      }
+      .dot.answered {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .dot.current {
+        border-color: var(--accent2);
+        color: var(--accent2);
+      }
+      .dot.answered.current {
+        background: var(--accent2);
+        border-color: var(--accent2);
+        color: #fff;
+      }
+
+      /* ─── QUESTION ─── */
+      .question-number {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+      .question-text {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.25rem;
+        color: var(--text);
+        line-height: 1.45;
+        margin-bottom: 24px;
+      }
+      .choices {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 28px;
+      }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          transform 0.1s;
+        background: var(--bg);
+      }
+      .choice:hover {
+        border-color: var(--accent);
+        background: rgba(26, 58, 92, 0.03);
+        transform: translateX(2px);
+      }
+      .choice.selected {
+        border-color: var(--accent);
+        background: rgba(26, 58, 92, 0.07);
+      }
+      .choice-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        font-weight: 700;
+        flex-shrink: 0;
+        color: var(--muted);
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .choice.selected .choice-letter {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .choice-text {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        padding-top: 2px;
+      }
+
+      /* ─── NAV ─── */
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .nav-center {
+        text-align: center;
+      }
+
+      /* ─── RESULTS ─── */
+      .score-hero {
+        text-align: center;
+        padding: 10px 0 30px;
+      }
+      .score-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 5px solid var(--accent);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        background: rgba(26, 58, 92, 0.05);
+      }
+      .score-number {
+        font-family: "DM Serif Display", serif;
+        font-size: 2.4rem;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .score-denom {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .score-msg {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.3rem;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .score-sub {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .results-list {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .result-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 9px;
+        font-size: 0.88rem;
+        line-height: 1.4;
+        border: 1px solid transparent;
+      }
+      .result-item.correct {
+        background: rgba(46, 139, 110, 0.08);
+        border-color: rgba(46, 139, 110, 0.2);
+      }
+      .result-item.wrong {
+        background: rgba(232, 83, 58, 0.07);
+        border-color: rgba(232, 83, 58, 0.18);
+      }
+      .result-icon {
+        font-size: 1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .result-q {
+        font-weight: 500;
+        color: var(--text);
+      }
+      .result-detail {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+      .result-detail em {
+        color: var(--accent3);
+        font-style: normal;
+        font-weight: 600;
+      }
+      .result-detail s {
+        color: var(--accent2);
+      }
+
+      /* ─── STATUS TOAST ─── */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--accent);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 99px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s cubic-bezier(0.22, 0.68, 0, 1.2);
+        z-index: 999;
+        white-space: nowrap;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .submit-note {
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+      .sending-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(245, 242, 235, 0.8);
+        backdrop-filter: blur(4px);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 16px;
+        font-family: "DM Serif Display", serif;
+        font-size: 1.2rem;
+        color: var(--accent);
+      }
+      .sending-overlay.show {
+        display: flex;
+      }
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══ HEADER ══ -->
+    <header class="app-header">
+      <div class="logo">SESAME <span>·</span> Exam</div>
+      <div class="tag">Compétences Digitales</div>
+    </header>
+
+    <!-- ══════════════════════════════════
+     SCREEN 1 — IDENTITÉ
+══════════════════════════════════════ -->
+    <div id="screen-identity" class="screen active">
+      <div class="card">
+        <h1 class="identity-title">Simulation<br />d'examen</h1>
+        <p class="identity-sub">
+          Concours SESAME — Séquence 1 : Compétences Digitales<br />Répondez à
+          20 questions en 20 minutes.
+        </p>
+
+        <div class="field-group">
+          <div class="field">
+            <label>Prénom</label>
+            <input
+              type="text"
+              id="inp-prenom"
+              placeholder="ex : Marie"
+              autocomplete="given-name"
+            />
+          </div>
+          <div class="field">
+            <label>Nom</label>
+            <input
+              type="text"
+              id="inp-nom"
+              placeholder="ex : Dupont"
+              autocomplete="family-name"
+            />
+          </div>
+        </div>
+
+        <div class="rules">
+          <strong>Règles :</strong> 20 questions · 1 seule bonne réponse ·
+          <strong>20 minutes</strong> au total.<br />
+          Vous pouvez naviguer librement entre les questions. Le test se soumet
+          automatiquement à 0:00.
+        </div>
+
+        <button class="btn btn-primary" onclick="startExam()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
+          </svg>
+          Commencer l'examen
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+     SCREEN 2 — EXAM
+══════════════════════════════════════ -->
+    <div id="screen-exam" class="screen">
+      <div class="card">
+        <div class="exam-topbar">
+          <div class="student-name">
+            <strong id="display-name">—</strong>
+          </div>
+          <div class="timer" id="timer-display">20:00</div>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-info">
+            <span id="progress-text">Question 1 / 20</span>
+            <span id="answered-count">0 répondues</span>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              id="progress-fill"
+              style="width: 5%"
+            ></div>
+          </div>
+          <div class="answered-dots" id="dots-container"></div>
+        </div>
+
+        <div class="question-number" id="q-number">Question 01</div>
+        <div class="question-text" id="q-text">Chargement…</div>
+        <div class="choices" id="q-choices"></div>
+
+        <div class="nav-row">
+          <button
+            class="btn btn-secondary"
+            id="btn-prev"
+            onclick="navigate(-1)"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16">
+              <path d="M10 3L4 8l6 5V3z" fill="currentColor" />
+            </svg>
+            Précédent
+          </button>
+          <div class="nav-center">
+            <button
+              class="btn btn-danger"
+              id="btn-submit"
+              onclick="confirmSubmit()"
+              disabled
+            >
+              Soumettre
+            </button>
+            <div class="submit-note" id="submit-note">
+              Répondez à toutes les questions
+            </div>
+          </div>
+          <button class="btn btn-secondary" id="btn-next" onclick="navigate(1)">
+            Suivant
+            <svg width="16" height="16" viewBox="0 0 16 16">
+              <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+     SCREEN 3 — RÉSULTATS
+══════════════════════════════════════ -->
+    <div id="screen-results" class="screen">
+      <div class="card">
+        <div class="score-hero">
+          <div class="score-circle">
+            <div class="score-number" id="res-score">—</div>
+            <div class="score-denom">/ 20</div>
+          </div>
+          <div class="score-msg" id="res-msg">—</div>
+          <div class="score-sub" id="res-sub">—</div>
+        </div>
+
+        <div class="results-list" id="results-list"></div>
+
+        <div style="text-align: center; margin-top: 28px">
+          <button class="btn btn-secondary" onclick="location.reload()">
+            Recommencer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay envoi -->
+    <div class="sending-overlay" id="sending-overlay">
+      <div class="spinner"></div>
+      Enregistrement des résultats…
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      // ════════════════════════════════════════════════════════
+      //  ⚙️  CONFIGURATION — à modifier par l'enseignant
+      // ════════════════════════════════════════════════════════
+
+      // 👉 Collez ici l'URL de votre Google Apps Script Web App après déploiement
+      const GOOGLE_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
+
+      // Durée de l'examen en secondes (20 min = 1200)
+      const EXAM_DURATION = 20 * 60;
+
+      // ════════════════════════════════════════════════════════
+      //  📋  QUESTIONS
+      //  Format : { q, choices: [{l, t}], answer: "a"|"b"|"c"|"d" }
+      //  ⚠️  Q1–Q5 et Q11–Q14 = PLACEHOLDERS → à compléter !
+      // ════════════════════════════════════════════════════════
+      const QUESTIONS = [
+        // ── Q1 à Q5 : À COMPLÉTER ─────────────────────────────
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 1.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a", // ← mettre la lettre correcte (a/b/c/d)
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 2.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 3.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 4.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 5.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+
+        // ── Q6 ────────────────────────────────────────────────
+        {
+          q: "Soit la feuille suivante dans un tableur (colonne A = NOM, colonne B = NOTE). Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",
+          choices: [
+            { l: "A", t: "=MAX(B2:B8)" },
+            { l: "B", t: "=SOMME(A2:A8)" },
+            { l: "C", t: "=MOYENNE(A2:A8)" },
+            { l: "D", t: "=MOYENNE(B2:B8)" },
+          ],
+          answer: "d",
+        },
+        // ── Q7 ────────────────────────────────────────────────
+        {
+          q: "Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",
+          choices: [
+            {
+              l: "A",
+              t: "Un type de filtre utilisé pour améliorer la qualité des photos.",
+            },
+            {
+              l: "B",
+              t: "Un espace virtuel où les utilisateurs peuvent discuter en privé.",
+            },
+            {
+              l: "C",
+              t: "Un algorithme qui montre uniquement du contenu similaire à celui déjà consulté par l'utilisateur.",
+            },
+            { l: "D", t: "Un groupe de hashtags populaires." },
+          ],
+          answer: "c",
+        },
+        // ── Q8 ────────────────────────────────────────────────
+        {
+          q: "Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",
+          choices: [
+            { l: "A", t: "Facebook" },
+            { l: "B", t: "Twitter" },
+            { l: "C", t: "LinkedIn" },
+            { l: "D", t: "Instagram" },
+          ],
+          answer: "c",
+        },
+        // ── Q9 ────────────────────────────────────────────────
+        {
+          q: "Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",
+          choices: [
+            { l: "A", t: "Phishing" },
+            { l: "B", t: "Spoofing" },
+            { l: "C", t: "Harcèlement en ligne" },
+            { l: "D", t: "Impersonation" },
+          ],
+          answer: "d",
+        },
+        // ── Q10 ───────────────────────────────────────────────
+        {
+          q: "Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",
+          choices: [
+            { l: "A", t: "Follower farming" },
+            { l: "B", t: "Social spamming" },
+            { l: "C", t: "Astroturfing" },
+            { l: "D", t: "Hashtagging" },
+          ],
+          answer: "a",
+        },
+
+        // ── Q11 à Q14 : À COMPLÉTER ───────────────────────────
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 11.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 12.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 13.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "⚠️ [PLACEHOLDER] Remplacez ce texte par la question 14.",
+          choices: [
+            { l: "A", t: "Réponse A — à compléter" },
+            { l: "B", t: "Réponse B — à compléter" },
+            { l: "C", t: "Réponse C — à compléter" },
+            { l: "D", t: "Réponse D — à compléter" },
+          ],
+          answer: "a",
+        },
+
+        // ── Q15 ───────────────────────────────────────────────
+        {
+          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x après l'exécution de cet algorithme ?",
+          choices: [
+            { l: "A", t: "5" },
+            { l: "B", t: "6" },
+            { l: "C", t: "4" },
+            { l: "D", t: "8" },
+          ],
+          answer: "b",
+        },
+        // ── Q16 ───────────────────────────────────────────────
+        {
+          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 100, x = x + 5 ». Combien d'itérations sont nécessaires pour que l'algorithme s'arrête ?",
+          choices: [
+            { l: "A", t: "20" },
+            { l: "B", t: "19" },
+            { l: "C", t: "21" },
+            { l: "D", t: "25" },
+          ],
+          answer: "a",
+        },
+        // ── Q17 ───────────────────────────────────────────────
+        {
+          q: "Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x après l'exécution de cet algorithme si n = 4 ?",
+          choices: [
+            { l: "A", t: "i" },
+            { l: "B", t: "4" },
+            { l: "C", t: "15" },
+            { l: "D", t: "10" },
+          ],
+          answer: "d",
+        },
+        // ── Q18 ───────────────────────────────────────────────
+        {
+          q: "Qu'est-ce qu'une bibliographie dans un document textuel ?",
+          choices: [
+            { l: "A", t: "Une liste des éditeurs potentiels du document." },
+            {
+              l: "B",
+              t: "Une liste des sources et des références citées dans le document.",
+            },
+            {
+              l: "C",
+              t: "Une section du document réservée aux graphiques et aux images.",
+            },
+            {
+              l: "D",
+              t: "Une section du document contenant des exemples pratiques.",
+            },
+          ],
+          answer: "b",
+        },
+        // ── Q19 ───────────────────────────────────────────────
+        {
+          q: "Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",
+          choices: [
+            { l: "A", t: "La facilité d'accès au document sur Internet." },
+            { l: "B", t: "La simplicité du langage utilisé dans le document." },
+            { l: "C", t: "La convivialité du design du document." },
+            {
+              l: "D",
+              t: "L'adaptation du document pour qu'il soit utilisable par un large public, y compris les personnes handicapées.",
+            },
+          ],
+          answer: "d",
+        },
+        // ── Q20 ───────────────────────────────────────────────
+        {
+          q: "Qu'est-ce qu'une infographie ?",
+          choices: [
+            { l: "A", t: "Un type de diagramme à secteurs." },
+            { l: "B", t: "Une représentation visuelle des données." },
+            { l: "C", t: "Un texte explicatif d'un tableau de données." },
+            { l: "D", t: "Un document qui agrège les données entre elles." },
+          ],
+          answer: "b",
+        },
+      ];
+
+      // ════════════════════════════════════════════════════════
+      //  STATE
+      // ════════════════════════════════════════════════════════
+      let state = {
+        prenom: "",
+        nom: "",
+        currentQ: 0,
+        answers: new Array(QUESTIONS.length).fill(null),
+        timerInterval: null,
+        secondsLeft: EXAM_DURATION,
+        startTime: null,
+        submitted: false,
+      };
+
+      // ════════════════════════════════════════════════════════
+      //  SCREENS
+      // ════════════════════════════════════════════════════════
+      function showScreen(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  START
+      // ════════════════════════════════════════════════════════
+      function startExam() {
+        const p = document.getElementById("inp-prenom").value.trim();
+        const n = document.getElementById("inp-nom").value.trim();
+        if (!p || !n) {
+          showToast("Veuillez saisir votre prénom et votre nom.");
+          return;
+        }
+        state.prenom = p;
+        state.nom = n;
+        state.startTime = new Date();
+        document.getElementById("display-name").textContent = `${p} ${n}`;
+        buildDots();
+        renderQuestion();
+        startTimer();
+        showScreen("screen-exam");
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  TIMER
+      // ════════════════════════════════════════════════════════
+      function startTimer() {
+        const el = document.getElementById("timer-display");
+        state.timerInterval = setInterval(() => {
+          state.secondsLeft--;
+          const m = Math.floor(state.secondsLeft / 60);
+          const s = state.secondsLeft % 60;
+          el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+          el.className = "timer";
+          if (state.secondsLeft <= 120) el.classList.add("warning");
+          if (state.secondsLeft <= 30) el.classList.add("danger");
+          if (state.secondsLeft <= 0) {
+            clearInterval(state.timerInterval);
+            el.textContent = "00:00";
+            submitExam(true);
+          }
+        }, 1000);
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  DOTS
+      // ════════════════════════════════════════════════════════
+      function buildDots() {
+        const c = document.getElementById("dots-container");
+        c.innerHTML = "";
+        QUESTIONS.forEach((_, i) => {
+          const d = document.createElement("button");
+          d.className = "dot";
+          d.id = `dot-${i}`;
+          d.textContent = i + 1;
+          d.title = `Question ${i + 1}`;
+          d.onclick = () => {
+            state.currentQ = i;
+            renderQuestion();
+          };
+          c.appendChild(d);
+        });
+      }
+      function updateDots() {
+        QUESTIONS.forEach((_, i) => {
+          const d = document.getElementById(`dot-${i}`);
+          if (!d) return;
+          d.className = "dot";
+          if (state.answers[i] !== null) d.classList.add("answered");
+          if (i === state.currentQ) d.classList.add("current");
+        });
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  RENDER QUESTION
+      // ════════════════════════════════════════════════════════
+      function renderQuestion() {
+        const i = state.currentQ;
+        const q = QUESTIONS[i];
+        document.getElementById("q-number").textContent =
+          `Question ${String(i + 1).padStart(2, "0")}`;
+        document.getElementById("q-text").textContent = q.q;
+        document.getElementById("progress-text").textContent =
+          `Question ${i + 1} / ${QUESTIONS.length}`;
+
+        const answered = state.answers.filter((a) => a !== null).length;
+        document.getElementById("answered-count").textContent =
+          `${answered} répondues`;
+        document.getElementById("progress-fill").style.width =
+          `${((i + 1) / QUESTIONS.length) * 100}%`;
+
+        // Choices
+        const cc = document.getElementById("q-choices");
+        cc.innerHTML = "";
+        q.choices.forEach((ch) => {
+          const div = document.createElement("div");
+          div.className =
+            "choice" +
+            (state.answers[i] === ch.l.toLowerCase() ? " selected" : "");
+          div.innerHTML = `<div class="choice-letter">${ch.l}</div><div class="choice-text">${ch.t}</div>`;
+          div.onclick = () => selectAnswer(ch.l.toLowerCase());
+          cc.appendChild(div);
+        });
+
+        // Nav buttons
+        document.getElementById("btn-prev").disabled = i === 0;
+        document.getElementById("btn-next").disabled =
+          i === QUESTIONS.length - 1;
+
+        // Submit button
+        const allAnswered = state.answers.every((a) => a !== null);
+        document.getElementById("btn-submit").disabled = !allAnswered;
+        document.getElementById("submit-note").textContent = allAnswered
+          ? "Toutes les questions sont répondues !"
+          : `${QUESTIONS.length - answered} question(s) sans réponse`;
+
+        updateDots();
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  SELECT ANSWER
+      // ════════════════════════════════════════════════════════
+      function selectAnswer(letter) {
+        state.answers[state.currentQ] = letter;
+        renderQuestion();
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  NAVIGATION
+      // ════════════════════════════════════════════════════════
+      function navigate(dir) {
+        const next = state.currentQ + dir;
+        if (next >= 0 && next < QUESTIONS.length) {
+          state.currentQ = next;
+          renderQuestion();
+        }
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  SUBMIT CONFIRM
+      // ════════════════════════════════════════════════════════
+      function confirmSubmit() {
+        const unanswered = state.answers.filter((a) => a === null).length;
+        if (unanswered > 0) {
+          showToast(`Il reste ${unanswered} question(s) sans réponse.`);
+          return;
+        }
+        if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?")) {
+          submitExam(false);
+        }
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  SUBMIT
+      // ════════════════════════════════════════════════════════
+      async function submitExam(timeUp) {
+        if (state.submitted) return;
+        state.submitted = true;
+        clearInterval(state.timerInterval);
+
+        const usedSeconds = EXAM_DURATION - state.secondsLeft;
+        const mins = Math.floor(usedSeconds / 60);
+        const secs = usedSeconds % 60;
+        const tempsUtilise = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+
+        // Calcul score
+        let score = 0;
+        state.answers.forEach((ans, i) => {
+          if (ans === QUESTIONS[i].answer) score++;
+        });
+
+        // Prépare payload Google Sheets
+        const now = new Date();
+        const dateStr = now.toLocaleString("fr-FR");
+        const payload = {
+          nom: state.nom,
+          prenom: state.prenom,
+          dateHeure: dateStr,
+          score: score,
+          tempsUtilise,
+          soumissionAutomatique: timeUp ? "OUI" : "NON",
+        };
+        QUESTIONS.forEach((_, i) => {
+          payload[`Q${i + 1}`] = state.answers[i] || "—";
+        });
+
+        // Envoi Google Apps Script
+        if (
+          GOOGLE_SCRIPT_URL &&
+          GOOGLE_SCRIPT_URL !==
+            "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec"
+        ) {
+          document.getElementById("sending-overlay").classList.add("show");
+          try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+          } catch (e) {
+            console.warn("Envoi échoué :", e);
+          }
+          document.getElementById("sending-overlay").classList.remove("show");
+        }
+
+        showResults(score, tempsUtilise, timeUp);
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  SHOW RESULTS
+      // ════════════════════════════════════════════════════════
+      function showResults(score, temps, timeUp) {
+        document.getElementById("res-score").textContent = score;
+
+        let msg, sub;
+        if (score >= 18) {
+          msg = "Excellent ! Bravo !";
+          sub = "Performance remarquable.";
+        } else if (score >= 14) {
+          msg = "Très bon résultat !";
+          sub = "Quelques points à consolider.";
+        } else if (score >= 10) {
+          msg = "Résultat moyen.";
+          sub = "Continuez à vous entraîner.";
+        } else {
+          msg = "Encore un effort !";
+          sub = "Revoyez les notions fondamentales.";
+        }
+
+        if (timeUp) sub += " (temps écoulé — soumission automatique)";
+        document.getElementById("res-msg").textContent = msg;
+        document.getElementById("res-sub").textContent =
+          `Score : ${score}/20 · Temps utilisé : ${temps}`;
+
+        const list = document.getElementById("results-list");
+        list.innerHTML = "";
+        QUESTIONS.forEach((q, i) => {
+          const userAns = state.answers[i] || "—";
+          const correct = q.answer;
+          const isOk = userAns === correct;
+
+          const choiceText = (l) => {
+            const c = q.choices.find((ch) => ch.l.toLowerCase() === l);
+            return c ? `${c.l}. ${c.t}` : l;
+          };
+
+          const div = document.createElement("div");
+          div.className = `result-item ${isOk ? "correct" : "wrong"}`;
+          div.innerHTML = `
+      <div class="result-icon">${isOk ? "✓" : "✗"}</div>
+      <div>
+        <div class="result-q">Q${i + 1}. ${q.q.substring(0, 70)}${q.q.length > 70 ? "…" : ""}</div>
+        <div class="result-detail">
+          ${
+            isOk
+              ? `<em>${choiceText(correct)}</em>`
+              : `Votre réponse : <s>${choiceText(userAns)}</s> · Bonne réponse : <em>${choiceText(correct)}</em>`
+          }
+        </div>
+      </div>`;
+          list.appendChild(div);
+        });
+
+        showScreen("screen-results");
+      }
+
+      // ════════════════════════════════════════════════════════
+      //  TOAST
+      // ════════════════════════════════════════════════════════
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      // Enter key on name fields
+      document.addEventListener("keydown", (e) => {
+        if (
+          e.key === "Enter" &&
+          document
+            .getElementById("screen-identity")
+            .classList.contains("active")
+        ) {
+          startExam();
+        }
+      });
+    </script>
+
+    <!--
+════════════════════════════════════════════════════════════════════════
+  📌 GUIDE DE DÉPLOIEMENT — Google Apps Script
+════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 — Créez un Google Sheet
+  1. Ouvrez drive.google.com → Nouveau → Google Sheets
+  2. Nommez-le "SESAME Résultats"
+
+ÉTAPE 2 — Créez le Apps Script
+  1. Dans le Sheet → Extensions → Apps Script
+  2. Supprimez tout le code existant
+  3. Collez ce code :
+
+-----------------------------------------------------------------
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data  = JSON.parse(e.postData.contents);
+
+  // En-têtes si première ligne vide
+  if (sheet.getLastRow() === 0) {
+    const headers = ["Nom","Prénom","Date/Heure","Score/20","Temps utilisé","Soumission auto"];
+    for (let i = 1; i <= 20; i++) headers.push(`Q${i}`);
+    sheet.appendRow(headers);
+  }
+
+  const row = [
+    data.nom, data.prenom, data.dateHeure, data.score,
+    data.tempsUtilise, data.soumissionAutomatique
+  ];
+  for (let i = 1; i <= 20; i++) row.push(data[`Q${i}`] || "—");
+  sheet.appendRow(row);
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status:"ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+-----------------------------------------------------------------
+
+ÉTAPE 3 — Déployez en Web App
+  1. Cliquez "Déployer" → "Nouveau déploiement"
+  2. Type : Web App
+  3. Exécuter en tant que : Moi
+  4. Accès : Tout le monde (anonyme)
+  5. Déployer → copiez l'URL
+
+ÉTAPE 4 — Collez l'URL dans ce fichier HTML
+  Remplacez "VOTRE_URL_ICI" par l'URL copiée :
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycb.../exec";
+
+ÉTAPE 5 — Hébergement statique
+  Option A — GitHub Pages :
+    1. Créez un repo GitHub → uploadez ce fichier → Settings → Pages → main branch
+  Option B — Netlify :
+    1. netlify.com → "Deploy manually" → glissez-déposez le fichier
+  Option C — Lien direct : partagez simplement le fichier (fonctionne en local aussi)
+
+════════════════════════════════════════════════════════════════════════
+-->
+  </body>
+</html>
