@@ -42,13 +42,42 @@
       }
       .app-header {
         width: 100%;
-        max-width: 680px;
+        max-width: 720px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 18px 0 28px;
         border-bottom: 1.5px solid var(--border);
         margin-bottom: 36px;
+      }
+      .logo-block {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .logo-img {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        object-fit: contain;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        padding: 4px;
+      }
+      .logo-img-placeholder {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .logo-img-placeholder svg {
+        width: 26px;
+        height: 26px;
+        fill: #fff;
       }
       .logo {
         font-family: "DM Serif Display", serif;
@@ -76,7 +105,7 @@
         box-shadow: var(--card-shadow);
         padding: 36px 40px;
         width: 100%;
-        max-width: 680px;
+        max-width: 720px;
         border: 1px solid var(--border);
         animation: fadeUp 0.45s cubic-bezier(0.22, 0.68, 0, 1.2) both;
       }
@@ -96,6 +125,7 @@
       .screen.active {
         display: block;
       }
+      /* ─── IDENTITY ─── */
       .identity-title {
         font-family: "DM Serif Display", serif;
         font-size: 1.9rem;
@@ -132,7 +162,8 @@
         color: var(--muted);
         margin-bottom: 7px;
       }
-      .field input {
+      .field input,
+      .field select {
         width: 100%;
         padding: 12px 14px;
         border: 1.5px solid var(--border);
@@ -146,7 +177,8 @@
           border-color 0.2s,
           box-shadow 0.2s;
       }
-      .field input:focus {
+      .field input:focus,
+      .field select:focus {
         border-color: var(--accent);
         box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.1);
       }
@@ -207,11 +239,21 @@
       .btn-danger:hover {
         box-shadow: 0 6px 20px rgba(232, 83, 58, 0.35);
       }
+      .btn-success {
+        background: var(--accent3);
+        color: #fff;
+        box-shadow: 0 3px 12px rgba(46, 139, 110, 0.3);
+      }
+      .btn-sm {
+        padding: 7px 14px;
+        font-size: 0.82rem;
+      }
       .btn:disabled {
         opacity: 0.4;
         cursor: not-allowed;
         pointer-events: none;
       }
+      /* ─── EXAM ─── */
       .exam-topbar {
         display: flex;
         justify-content: space-between;
@@ -392,6 +434,7 @@
       .nav-center {
         text-align: center;
       }
+      /* ─── RESULTS ─── */
       .score-hero {
         text-align: center;
         padding: 10px 0 30px;
@@ -474,6 +517,165 @@
       .result-detail s {
         color: var(--accent2);
       }
+      /* ─── ADMIN ─── */
+      .admin-section-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.4rem;
+        color: var(--accent);
+        margin-bottom: 20px;
+      }
+      .admin-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 28px;
+        border-bottom: 1.5px solid var(--border);
+        padding-bottom: 0;
+      }
+      .admin-tab {
+        padding: 10px 20px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -1.5px;
+        transition:
+          color 0.2s,
+          border-color 0.2s;
+      }
+      .admin-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+      .admin-panel {
+        display: none;
+      }
+      .admin-panel.active {
+        display: block;
+      }
+      .candidate-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .candidate-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .candidate-name-text {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+      .candidate-meta {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .badge-active {
+        background: rgba(46, 139, 110, 0.12);
+        color: var(--accent3);
+      }
+      .badge-blocked {
+        background: rgba(232, 83, 58, 0.1);
+        color: var(--accent2);
+      }
+      .badge-done {
+        background: rgba(26, 58, 92, 0.1);
+        color: var(--accent);
+      }
+      .dot-status {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot-active {
+        background: var(--accent3);
+      }
+      .dot-blocked {
+        background: var(--accent2);
+      }
+      .dot-done {
+        background: var(--accent);
+      }
+      .add-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 12px;
+        margin-bottom: 24px;
+        align-items: end;
+      }
+      @media (max-width: 560px) {
+        .add-form {
+          grid-template-columns: 1fr;
+        }
+      }
+      .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 28px;
+      }
+      .stat-card {
+        background: rgba(26, 58, 92, 0.05);
+        border-radius: 10px;
+        padding: 14px 16px;
+        text-align: center;
+      }
+      .stat-number {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.8rem;
+        color: var(--accent);
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .search-bar {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.92rem;
+        background: var(--bg);
+        outline: none;
+        margin-bottom: 16px;
+        transition: border-color 0.2s;
+      }
+      .search-bar:focus {
+        border-color: var(--accent);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 32px 16px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      /* ─── TOAST / OVERLAY ─── */
       .toast {
         position: fixed;
         bottom: 24px;
@@ -493,11 +695,8 @@
       .toast.show {
         transform: translateX(-50%) translateY(0);
       }
-      .submit-note {
-        text-align: center;
-        font-size: 0.78rem;
-        color: var(--muted);
-        margin-top: 10px;
+      .toast.error {
+        background: var(--accent2);
       }
       .sending-overlay {
         display: none;
@@ -530,16 +729,84 @@
           transform: rotate(360deg);
         }
       }
+      .submit-note {
+        text-align: center;
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 10px;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 24px 0;
+      }
+      .nav-link {
+        font-size: 0.82rem;
+        color: var(--muted);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        background: none;
+        border: none;
+        font-family: "DM Sans", sans-serif;
+      }
+      .nav-link:hover {
+        color: var(--accent);
+      }
+      .access-denied {
+        background: rgba(232, 83, 58, 0.07);
+        border: 1px solid rgba(232, 83, 58, 0.2);
+        border-radius: 10px;
+        padding: 16px 18px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: var(--accent2);
+      }
+      .loading-state {
+        text-align: center;
+        padding: 40px 16px;
+        color: var(--muted);
+      }
     </style>
   </head>
   <body>
     <header class="app-header">
-      <div class="logo">SESAME <span>·</span> Exam</div>
-      <div class="tag">Compétences Digitales</div>
+      <div class="logo-block">
+        <!-- Logo placeholder — remplacez src par votre logo réel -->
+        <div class="logo-img-placeholder" id="logo-placeholder">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
+            />
+          </svg>
+        </div>
+        <div class="logo">SESAME <span>·</span> Exam</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <div class="tag">Compétences Digitales</div>
+        <button
+          class="nav-link"
+          id="header-admin-btn"
+          onclick="showAdminLogin()"
+          style="display: none"
+        >
+          Admin
+        </button>
+      </div>
     </header>
 
-    <!-- SCREEN 1 — IDENTITÉ -->
-    <div id="screen-identity" class="screen active">
+    <!-- ══════ SCREEN: LOADING ══════ -->
+    <div id="screen-loading" class="screen active">
+      <div class="card">
+        <div class="loading-state">
+          <div class="spinner" style="margin: 0 auto 12px"></div>
+          Chargement…
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: IDENTITY (candidat) ══════ -->
+    <div id="screen-identity" class="screen">
       <div class="card">
         <h1 class="identity-title">Simulation<br />d'examen</h1>
         <p class="identity-sub">
@@ -566,22 +833,220 @@
             />
           </div>
         </div>
+        <div
+          id="identity-error"
+          class="access-denied"
+          style="display: none"
+        ></div>
         <div class="rules">
           <strong>Règles :</strong> 20 questions · 1 seule bonne réponse ·
           <strong>20 minutes</strong> au total.<br />
           Vous pouvez naviguer librement entre les questions. Le test se soumet
           automatiquement à 0:00.
         </div>
-        <button class="btn btn-primary" onclick="startExam()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
-          </svg>
-          Commencer l'examen
-        </button>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+          "
+        >
+          <button class="btn btn-primary" onclick="checkCandidate()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
+            </svg>
+            Commencer l'examen
+          </button>
+          <button class="nav-link" onclick="showAdminLogin()">
+            Accès administrateur
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- SCREEN 2 — EXAM -->
+    <!-- ══════ SCREEN: ADMIN LOGIN ══════ -->
+    <div id="screen-admin-login" class="screen">
+      <div class="card" style="max-width: 420px">
+        <h1 class="identity-title">Espace<br />Administrateur</h1>
+        <p class="identity-sub">
+          Entrez le mot de passe pour accéder au tableau de bord.
+        </p>
+        <div class="field" style="margin-bottom: 20px">
+          <label>Mot de passe</label>
+          <input
+            type="password"
+            id="inp-admin-pwd"
+            placeholder="••••••••"
+            onkeydown="if (event.key === 'Enter') loginAdmin();"
+          />
+        </div>
+        <div id="admin-login-error" class="access-denied" style="display: none">
+          Mot de passe incorrect.
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+          "
+        >
+          <button class="btn btn-primary" onclick="loginAdmin()">
+            Se connecter
+          </button>
+          <button class="nav-link" onclick="showScreen('screen-identity')">
+            ← Retour candidats
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: ADMIN DASHBOARD ══════ -->
+    <div id="screen-admin" class="screen">
+      <div class="card">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+          "
+        >
+          <h1 class="admin-section-title" style="margin-bottom: 0">
+            Tableau de bord Admin
+          </h1>
+          <button class="nav-link" onclick="logoutAdmin()">
+            Se déconnecter
+          </button>
+        </div>
+        <div class="stat-cards" id="admin-stats"></div>
+        <div class="admin-tabs">
+          <button
+            class="admin-tab active"
+            onclick="switchTab('tab-candidates')"
+          >
+            Candidats
+          </button>
+          <button class="admin-tab" onclick="switchTab('tab-results')">
+            Résultats
+          </button>
+          <button class="admin-tab" onclick="switchTab('tab-settings')">
+            Paramètres
+          </button>
+        </div>
+
+        <!-- TAB: CANDIDATS -->
+        <div class="admin-panel active" id="tab-candidates">
+          <p
+            style="font-size: 0.85rem; color: var(--muted); margin-bottom: 16px"
+          >
+            Ajoutez les candidats autorisés à passer l'examen. Un candidat avec
+            le statut <strong>Actif</strong> peut passer l'examen. Après
+            passage, son statut passe à <strong>A passé</strong>. Vous pouvez le
+            réinitialiser pour lui permettre de repasser.
+          </p>
+          <div class="add-form">
+            <div class="field">
+              <label>Prénom</label
+              ><input type="text" id="add-prenom" placeholder="ex : Marie" />
+            </div>
+            <div class="field">
+              <label>Nom</label
+              ><input type="text" id="add-nom" placeholder="ex : Dupont" />
+            </div>
+            <div class="field">
+              <label>&nbsp;</label
+              ><button class="btn btn-primary" onclick="addCandidate()">
+                + Ajouter
+              </button>
+            </div>
+          </div>
+          <input
+            class="search-bar"
+            type="text"
+            id="search-candidates"
+            placeholder="Rechercher un candidat…"
+            oninput="renderCandidateList()"
+          />
+          <div id="candidate-list"></div>
+        </div>
+
+        <!-- TAB: RÉSULTATS -->
+        <div class="admin-panel" id="tab-results">
+          <p
+            style="font-size: 0.85rem; color: var(--muted); margin-bottom: 16px"
+          >
+            Résultats des candidats ayant terminé l'examen, stockés localement.
+          </p>
+          <div id="results-admin-list"></div>
+        </div>
+
+        <!-- TAB: PARAMÈTRES -->
+        <div class="admin-panel" id="tab-settings">
+          <p
+            style="font-size: 0.85rem; color: var(--muted); margin-bottom: 20px"
+          >
+            Personnalisation de l'examen.
+          </p>
+          <div class="field" style="margin-bottom: 16px">
+            <label>Nom du centre / institution</label>
+            <input
+              type="text"
+              id="setting-centre"
+              placeholder="ex : SESAME Business School"
+            />
+          </div>
+          <div class="field" style="margin-bottom: 16px">
+            <label>URL du logo (optionnel)</label>
+            <input
+              type="text"
+              id="setting-logo"
+              placeholder="https://…/logo.png"
+            />
+          </div>
+          <div class="field" style="margin-bottom: 16px">
+            <label>Mot de passe admin actuel</label>
+            <input
+              type="password"
+              id="setting-old-pwd"
+              placeholder="Mot de passe actuel"
+            />
+          </div>
+          <div class="field" style="margin-bottom: 16px">
+            <label>Nouveau mot de passe admin</label>
+            <input
+              type="password"
+              id="setting-new-pwd"
+              placeholder="Nouveau mot de passe"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">
+            Enregistrer
+          </button>
+          <div class="divider"></div>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--accent2);
+              margin-bottom: 12px;
+            "
+          >
+            ⚠ Zone dangereuse
+          </p>
+          <button class="btn btn-danger btn-sm" onclick="resetAllData()">
+            Réinitialiser toutes les données
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SCREEN: EXAM ══════ -->
     <div id="screen-exam" class="screen">
       <div class="card">
         <div class="exam-topbar">
@@ -612,9 +1077,8 @@
             onclick="navigate(-1)"
           >
             <svg width="16" height="16" viewBox="0 0 16 16">
-              <path d="M10 3L4 8l6 5V3z" fill="currentColor" />
-            </svg>
-            Précédent
+              <path d="M10 3L4 8l6 5V3z" fill="currentColor" /></svg
+            >Précédent
           </button>
           <div class="nav-center">
             <button
@@ -630,8 +1094,7 @@
             </div>
           </div>
           <button class="btn btn-secondary" id="btn-next" onclick="navigate(1)">
-            Suivant
-            <svg width="16" height="16" viewBox="0 0 16 16">
+            Suivant<svg width="16" height="16" viewBox="0 0 16 16">
               <path d="M6 3l6 5-6 5V3z" fill="currentColor" />
             </svg>
           </button>
@@ -639,7 +1102,7 @@
       </div>
     </div>
 
-    <!-- SCREEN 3 — RÉSULTATS -->
+    <!-- ══════ SCREEN: RESULTS ══════ -->
     <div id="screen-results" class="screen">
       <div class="card">
         <div class="score-hero">
@@ -666,333 +1129,98 @@
     <div class="toast" id="toast"></div>
 
     <script>
-      // ══════════════════════════════════════════════
-      //  CONFIGURATION
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
+      //  CONFIG
+      // ════════════════════════════════════════════
       const GOOGLE_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
       const EXAM_DURATION = 20 * 60;
+      const DEFAULT_ADMIN_PWD = "sesame2025";
+      const STORAGE_KEY_CANDIDATES = "sesame:candidates";
+      const STORAGE_KEY_RESULTS = "sesame:results";
+      const STORAGE_KEY_SETTINGS = "sesame:settings";
 
-      // ══════════════════════════════════════════════
-      //  QUESTIONS
-      // ══════════════════════════════════════════════
-      const QUESTIONS = [
-        // Q1
-        {
-          q: "Dans un tableur, la cellule A1 contient 200 et la cellule A2 contient 50. Quelle formule affiche le pourcentage que représente A2 par rapport à A1 ?",
-          choices: [
-            { l: "A", t: "=A1/A2*100" },
-            { l: "B", t: "=A2-A1" },
-            { l: "C", t: "=A2/A1*100" },
-            { l: "D", t: "=A1*A2/100" },
-          ],
-          answer: "c",
+      // ════════════════════════════════════════════
+      //  STORAGE HELPERS (localStorage fallback)
+      // ════════════════════════════════════════════
+      const store = {
+        async get(key) {
+          if (window.storage) {
+            try {
+              const r = await window.storage.get(key, true);
+              return r ? JSON.parse(r.value) : null;
+            } catch (e) {
+              return null;
+            }
+          }
+          const v = localStorage.getItem(key);
+          return v ? JSON.parse(v) : null;
         },
-        // Q2
-        {
-          q: "Quelle est la différence entre « Enregistrer » et « Enregistrer sous » dans un traitement de texte ?",
-          choices: [
-            {
-              l: "A",
-              t: "« Enregistrer » crée une copie du fichier, « Enregistrer sous » met à jour l'original.",
-            },
-            {
-              l: "B",
-              t: "« Enregistrer » met à jour le fichier existant, « Enregistrer sous » crée un nouveau fichier ou change l'emplacement.",
-            },
-            { l: "C", t: "Les deux fonctions font exactement la même chose." },
-            {
-              l: "D",
-              t: "« Enregistrer sous » supprime l'ancienne version du fichier automatiquement.",
-            },
-          ],
-          answer: "b",
+        async set(key, val) {
+          if (window.storage) {
+            try {
+              await window.storage.set(key, JSON.stringify(val), true);
+            } catch (e) {}
+          } else {
+            localStorage.setItem(key, JSON.stringify(val));
+          }
         },
-        // Q3
-        {
-          q: "Quel format de fichier est le plus adapté pour partager un document dont on veut préserver la mise en forme et empêcher les modifications faciles ?",
-          choices: [
-            { l: "A", t: ".docx" },
-            { l: "B", t: ".txt" },
-            { l: "C", t: ".xlsx" },
-            { l: "D", t: ".pdf" },
-          ],
-          answer: "d",
-        },
-        // Q4
-        {
-          q: "Dans un moteur de recherche, quel opérateur permet de chercher une expression exacte ?",
-          choices: [
-            { l: "A", t: "Des parenthèses : (intelligence artificielle)" },
-            { l: "B", t: 'Des guillemets : "intelligence artificielle"' },
-            { l: "C", t: "Un astérisque : *intelligence artificielle*" },
-            { l: "D", t: "Un signe plus : +intelligence artificielle" },
-          ],
-          answer: "b",
-        },
-        // Q5
-        {
-          q: "Dans un tableur, les cellules C2 à C6 contiennent les valeurs 8, 12, 5, 15, 10. Que retourne la formule =MAX(C2:C6) ?",
-          choices: [
-            { l: "A", t: "10" },
-            { l: "B", t: "50" },
-            { l: "C", t: "15" },
-            { l: "D", t: "12" },
-          ],
-          answer: "c",
-        },
-        // Q6
-        {
-          q: "Soit la feuille suivante dans un tableur (colonne A = NOM, colonne B = NOTE). Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",
-          choices: [
-            { l: "A", t: "=MAX(B2:B8)" },
-            { l: "B", t: "=SOMME(A2:A8)" },
-            { l: "C", t: "=MOYENNE(A2:A8)" },
-            { l: "D", t: "=MOYENNE(B2:B8)" },
-          ],
-          answer: "d",
-        },
-        // Q7
-        {
-          q: "Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",
-          choices: [
-            {
-              l: "A",
-              t: "Un type de filtre utilisé pour améliorer la qualité des photos.",
-            },
-            {
-              l: "B",
-              t: "Un espace virtuel où les utilisateurs peuvent discuter en privé.",
-            },
-            {
-              l: "C",
-              t: "Un algorithme qui montre uniquement du contenu similaire à celui déjà consulté par l'utilisateur.",
-            },
-            { l: "D", t: "Un groupe de hashtags populaires." },
-          ],
-          answer: "c",
-        },
-        // Q8
-        {
-          q: "Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",
-          choices: [
-            { l: "A", t: "Facebook" },
-            { l: "B", t: "Twitter" },
-            { l: "C", t: "LinkedIn" },
-            { l: "D", t: "Instagram" },
-          ],
-          answer: "c",
-        },
-        // Q9
-        {
-          q: "Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",
-          choices: [
-            { l: "A", t: "Phishing" },
-            { l: "B", t: "Spoofing" },
-            { l: "C", t: "Harcèlement en ligne" },
-            { l: "D", t: "Impersonation" },
-          ],
-          answer: "d",
-        },
-        // Q10
-        {
-          q: "Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",
-          choices: [
-            { l: "A", t: "Follower farming" },
-            { l: "B", t: "Social spamming" },
-            { l: "C", t: "Astroturfing" },
-            { l: "D", t: "Hashtagging" },
-          ],
-          answer: "a",
-        },
-        // Q11
-        {
-          q: "Qu'est-ce que le « droit à l'oubli » sur Internet ?",
-          choices: [
-            {
-              l: "A",
-              t: "Le droit de supprimer son compte sur n'importe quel réseau social sans justification.",
-            },
-            {
-              l: "B",
-              t: "Le droit de ne pas être photographié dans un lieu public.",
-            },
-            {
-              l: "C",
-              t: "Le droit de demander la suppression de ses données personnelles auprès d'un service en ligne.",
-            },
-            {
-              l: "D",
-              t: "Le droit d'accéder anonymement à tous les services en ligne sans créer de compte.",
-            },
-          ],
-          answer: "c",
-        },
-        // Q12
-        {
-          q: "Qu'est-ce qu'un mot de passe fort ?",
-          choices: [
-            {
-              l: "A",
-              t: "Un mot de passe composé uniquement de lettres minuscules facile à retenir.",
-            },
-            {
-              l: "B",
-              t: "Un mot de passe combinant majuscules, minuscules, chiffres et caractères spéciaux d'au moins 12 caractères.",
-            },
-            {
-              l: "C",
-              t: "Un mot de passe identique sur tous vos comptes pour ne pas l'oublier.",
-            },
-            {
-              l: "D",
-              t: "Un mot de passe composé de votre prénom suivi de votre année de naissance.",
-            },
-          ],
-          answer: "b",
-        },
-        // Q13
-        {
-          q: "Qu'est-ce que le phishing (hameçonnage) ?",
-          choices: [
-            {
-              l: "A",
-              t: "Une technique de compression de fichiers pour les envoyer par email.",
-            },
-            {
-              l: "B",
-              t: "Un logiciel permettant de filtrer les spams dans une boîte mail.",
-            },
-            {
-              l: "C",
-              t: "Un virus qui chiffre les fichiers de l'ordinateur et demande une rançon.",
-            },
-            {
-              l: "D",
-              t: "Une tentative frauduleuse d'obtenir des informations personnelles en se faisant passer pour une entité de confiance.",
-            },
-          ],
-          answer: "d",
-        },
-        // Q14
-        {
-          q: "Parmi ces propositions, laquelle décrit le mieux le rôle d'un système d'exploitation ?",
-          choices: [
-            {
-              l: "A",
-              t: "Gérer les ressources matérielles et logicielles de l'ordinateur et faire l'interface entre l'utilisateur et la machine.",
-            },
-            {
-              l: "B",
-              t: "Permettre uniquement la connexion à Internet et la navigation sur le web.",
-            },
-            {
-              l: "C",
-              t: "Créer et modifier des documents texte, des tableurs et des présentations.",
-            },
-            {
-              l: "D",
-              t: "Protéger l'ordinateur contre les virus et les logiciels malveillants.",
-            },
-          ],
-          answer: "a",
-        },
-        // Q15
-        {
-          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x après l'exécution de cet algorithme ?",
-          choices: [
-            { l: "A", t: "5" },
-            { l: "B", t: "6" },
-            { l: "C", t: "4" },
-            { l: "D", t: "8" },
-          ],
-          answer: "b",
-        },
-        // Q16
-        {
-          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 100, x = x + 5 ». Combien d'itérations sont nécessaires pour que l'algorithme s'arrête ?",
-          choices: [
-            { l: "A", t: "20" },
-            { l: "B", t: "19" },
-            { l: "C", t: "21" },
-            { l: "D", t: "25" },
-          ],
-          answer: "a",
-        },
-        // Q17
-        {
-          q: "Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x si n = 4 ?",
-          choices: [
-            { l: "A", t: "i" },
-            { l: "B", t: "4" },
-            { l: "C", t: "15" },
-            { l: "D", t: "10" },
-          ],
-          answer: "d",
-        },
-        // Q18
-        {
-          q: "Qu'est-ce qu'une bibliographie dans un document textuel ?",
-          choices: [
-            { l: "A", t: "Une liste des éditeurs potentiels du document." },
-            {
-              l: "B",
-              t: "Une liste des sources et des références citées dans le document.",
-            },
-            {
-              l: "C",
-              t: "Une section du document réservée aux graphiques et aux images.",
-            },
-            {
-              l: "D",
-              t: "Une section du document contenant des exemples pratiques.",
-            },
-          ],
-          answer: "b",
-        },
-        // Q19
-        {
-          q: "Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",
-          choices: [
-            { l: "A", t: "La facilité d'accès au document sur Internet." },
-            { l: "B", t: "La simplicité du langage utilisé dans le document." },
-            { l: "C", t: "La convivialité du design du document." },
-            {
-              l: "D",
-              t: "L'adaptation du document pour qu'il soit utilisable par un large public, y compris les personnes handicapées.",
-            },
-          ],
-          answer: "d",
-        },
-        // Q20
-        {
-          q: "Qu'est-ce qu'une infographie ?",
-          choices: [
-            { l: "A", t: "Un type de diagramme à secteurs." },
-            { l: "B", t: "Une représentation visuelle des données." },
-            { l: "C", t: "Un texte explicatif d'un tableau de données." },
-            { l: "D", t: "Un document qui agrège les données entre elles." },
-          ],
-          answer: "b",
-        },
-      ];
+      };
 
-      // ══════════════════════════════════════════════
-      //  STATE
-      // ══════════════════════════════════════════════
-      let state = {
+      // ════════════════════════════════════════════
+      //  APP STATE
+      // ════════════════════════════════════════════
+      let appSettings = {
+        adminPwd: DEFAULT_ADMIN_PWD,
+        centreName: "SESAME Business School",
+        logoUrl: "",
+      };
+      let candidates = []; // [{id, prenom, nom, status: 'active'|'blocked'|'done', addedAt}]
+      let examResults = []; // [{nom, prenom, score, temps, date, soumissionAuto}]
+      let examState = {
         prenom: "",
         nom: "",
         currentQ: 0,
-        answers: new Array(QUESTIONS.length).fill(null),
+        answers: new Array(20).fill(null),
         timerInterval: null,
         secondsLeft: EXAM_DURATION,
         submitted: false,
+        candidateId: null,
       };
+      let adminLoggedIn = false;
 
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
+      //  INIT
+      // ════════════════════════════════════════════
+      async function init() {
+        const [c, r, s] = await Promise.all([
+          store.get(STORAGE_KEY_CANDIDATES),
+          store.get(STORAGE_KEY_RESULTS),
+          store.get(STORAGE_KEY_SETTINGS),
+        ]);
+        if (c) candidates = c;
+        if (r) examResults = r;
+        if (s) appSettings = { ...appSettings, ...s };
+        applyBranding();
+        document.getElementById("header-admin-btn").style.display = "inline";
+        showScreen("screen-identity");
+      }
+
+      function applyBranding() {
+        const placeholder = document.getElementById("logo-placeholder");
+        if (appSettings.logoUrl) {
+          const img = document.createElement("img");
+          img.src = appSettings.logoUrl;
+          img.className = "logo-img";
+          img.alt = "Logo";
+          img.onerror = () => {}; // keep placeholder on error
+          placeholder.replaceWith(img);
+        }
+      }
+
+      // ════════════════════════════════════════════
       //  SCREENS
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       function showScreen(id) {
         document
           .querySelectorAll(".screen")
@@ -1000,49 +1228,336 @@
         document.getElementById(id).classList.add("active");
       }
 
-      // ══════════════════════════════════════════════
-      //  START
-      // ══════════════════════════════════════════════
-      function startExam() {
-        const p = document.getElementById("inp-prenom").value.trim();
-        const n = document.getElementById("inp-nom").value.trim();
-        if (!p || !n) {
+      function showAdminLogin() {
+        document.getElementById("inp-admin-pwd").value = "";
+        document.getElementById("admin-login-error").style.display = "none";
+        showScreen("screen-admin-login");
+      }
+
+      // ════════════════════════════════════════════
+      //  ADMIN AUTH
+      // ════════════════════════════════════════════
+      function loginAdmin() {
+        const pwd = document.getElementById("inp-admin-pwd").value;
+        if (pwd === appSettings.adminPwd) {
+          adminLoggedIn = true;
+          document.getElementById("admin-login-error").style.display = "none";
+          loadAdminDashboard();
+          showScreen("screen-admin");
+        } else {
+          document.getElementById("admin-login-error").style.display = "block";
+        }
+      }
+
+      function logoutAdmin() {
+        adminLoggedIn = false;
+        showScreen("screen-identity");
+      }
+
+      // ════════════════════════════════════════════
+      //  ADMIN DASHBOARD
+      // ════════════════════════════════════════════
+      function loadAdminDashboard() {
+        renderStats();
+        renderCandidateList();
+        renderResultsAdmin();
+        // pre-fill settings
+        document.getElementById("setting-centre").value =
+          appSettings.centreName || "";
+        document.getElementById("setting-logo").value =
+          appSettings.logoUrl || "";
+        document.getElementById("setting-old-pwd").value = "";
+        document.getElementById("setting-new-pwd").value = "";
+      }
+
+      function renderStats() {
+        const total = candidates.length;
+        const active = candidates.filter((c) => c.status === "active").length;
+        const done = candidates.filter((c) => c.status === "done").length;
+        const blocked = candidates.filter((c) => c.status === "blocked").length;
+        document.getElementById("admin-stats").innerHTML = `
+    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Candidats</div></div>
+    <div class="stat-card"><div class="stat-number">${active}</div><div class="stat-label">Actifs</div></div>
+    <div class="stat-card"><div class="stat-number">${done}</div><div class="stat-label">Ont passé</div></div>
+  `;
+      }
+
+      function switchTab(id) {
+        document
+          .querySelectorAll(".admin-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".admin-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        const idx = ["tab-candidates", "tab-results", "tab-settings"].indexOf(
+          id,
+        );
+        document.querySelectorAll(".admin-tab")[idx].classList.add("active");
+      }
+
+      // ─── CANDIDATES ───
+      function normalise(s) {
+        return s
+          .trim()
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+
+      function addCandidate() {
+        const prenom = document.getElementById("add-prenom").value.trim();
+        const nom = document.getElementById("add-nom").value.trim();
+        if (!prenom || !nom) {
+          showToast("Prénom et nom requis.", "error");
+          return;
+        }
+        const exists = candidates.some(
+          (c) =>
+            normalise(c.prenom) === normalise(prenom) &&
+            normalise(c.nom) === normalise(nom),
+        );
+        if (exists) {
+          showToast("Ce candidat existe déjà.", "error");
+          return;
+        }
+        const cand = {
+          id: Date.now().toString(),
+          prenom,
+          nom,
+          status: "active",
+          addedAt: new Date().toLocaleString("fr-FR"),
+        };
+        candidates.push(cand);
+        store.set(STORAGE_KEY_CANDIDATES, candidates);
+        document.getElementById("add-prenom").value = "";
+        document.getElementById("add-nom").value = "";
+        renderStats();
+        renderCandidateList();
+        showToast(`${prenom} ${nom} ajouté(e).`);
+      }
+
+      function toggleCandidateStatus(id) {
+        const c = candidates.find((c) => c.id === id);
+        if (!c) return;
+        if (c.status === "active") c.status = "blocked";
+        else if (c.status === "blocked") c.status = "active";
+        else if (c.status === "done") {
+          c.status = "active";
+          showToast(`${c.prenom} ${c.nom} peut repasser l'examen.`);
+        }
+        store.set(STORAGE_KEY_CANDIDATES, candidates);
+        renderStats();
+        renderCandidateList();
+      }
+
+      function deleteCandidate(id) {
+        const c = candidates.find((c) => c.id === id);
+        if (!c || !confirm(`Supprimer ${c.prenom} ${c.nom} ?`)) return;
+        candidates = candidates.filter((c) => c.id !== id);
+        store.set(STORAGE_KEY_CANDIDATES, candidates);
+        renderStats();
+        renderCandidateList();
+        showToast("Candidat supprimé.");
+      }
+
+      function renderCandidateList() {
+        const search = normalise(
+          document.getElementById("search-candidates").value || "",
+        );
+        const filtered = candidates.filter(
+          (c) =>
+            !search ||
+            normalise(c.prenom + " " + c.nom).includes(search) ||
+            normalise(c.nom + " " + c.prenom).includes(search),
+        );
+        const el = document.getElementById("candidate-list");
+        if (filtered.length === 0) {
+          el.innerHTML = `<div class="empty-state">${search ? "Aucun résultat." : "Aucun candidat. Ajoutez-en ci-dessus."}</div>`;
+          return;
+        }
+        el.innerHTML = filtered
+          .map((c) => {
+            const { badge, dotClass, label, btnLabel, btnClass } = statusMeta(
+              c.status,
+            );
+            return `<div class="candidate-row">
+      <div class="candidate-info">
+        <div class="candidate-name-text">${c.prenom} ${c.nom}</div>
+        <div class="candidate-meta">Ajouté le ${c.addedAt}</div>
+      </div>
+      <span class="${badge}"><span class="dot-status ${dotClass}"></span>${label}</span>
+      <button class="btn btn-sm ${btnClass}" onclick="toggleCandidateStatus('${c.id}')">${btnLabel}</button>
+      <button class="btn btn-sm btn-secondary" onclick="deleteCandidate('${c.id}')" title="Supprimer">✕</button>
+    </div>`;
+          })
+          .join("");
+      }
+
+      function statusMeta(status) {
+        if (status === "active")
+          return {
+            badge: "status-badge badge-active",
+            dotClass: "dot-active",
+            label: "Actif",
+            btnLabel: "Bloquer",
+            btnClass: "btn-secondary",
+          };
+        if (status === "blocked")
+          return {
+            badge: "status-badge badge-blocked",
+            dotClass: "dot-blocked",
+            label: "Bloqué",
+            btnLabel: "Activer",
+            btnClass: "btn-success",
+          };
+        return {
+          badge: "status-badge badge-done",
+          dotClass: "dot-done",
+          label: "A passé",
+          btnLabel: "Réinitialiser",
+          btnClass: "btn-primary",
+        };
+      }
+
+      // ─── RESULTS ADMIN ───
+      function renderResultsAdmin() {
+        const el = document.getElementById("results-admin-list");
+        if (examResults.length === 0) {
+          el.innerHTML =
+            '<div class="empty-state">Aucun résultat enregistré localement.</div>';
+          return;
+        }
+        el.innerHTML = examResults
+          .slice()
+          .reverse()
+          .map(
+            (r) => `
+    <div class="candidate-row">
+      <div class="candidate-info">
+        <div class="candidate-name-text">${r.prenom} ${r.nom}</div>
+        <div class="candidate-meta">${r.date} · Temps : ${r.temps}${r.soumissionAuto === "OUI" ? " · ⏱ Auto" : ""}</div>
+      </div>
+      <span class="status-badge badge-done">${r.score}/20</span>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ─── SETTINGS ───
+      async function saveSettings() {
+        const oldPwd = document.getElementById("setting-old-pwd").value;
+        const newPwd = document.getElementById("setting-new-pwd").value;
+        if (newPwd) {
+          if (oldPwd !== appSettings.adminPwd) {
+            showToast("Mot de passe actuel incorrect.", "error");
+            return;
+          }
+          appSettings.adminPwd = newPwd;
+        }
+        appSettings.centreName =
+          document.getElementById("setting-centre").value.trim() ||
+          "SESAME Business School";
+        appSettings.logoUrl = document
+          .getElementById("setting-logo")
+          .value.trim();
+        await store.set(STORAGE_KEY_SETTINGS, appSettings);
+        showToast("Paramètres sauvegardés.");
+      }
+
+      async function resetAllData() {
+        if (
+          !confirm(
+            "⚠ Cela supprimera TOUS les candidats et résultats. Confirmer ?",
+          )
+        )
+          return;
+        candidates = [];
+        examResults = [];
+        await store.set(STORAGE_KEY_CANDIDATES, []);
+        await store.set(STORAGE_KEY_RESULTS, []);
+        renderStats();
+        renderCandidateList();
+        renderResultsAdmin();
+        showToast("Toutes les données réinitialisées.");
+      }
+
+      // ════════════════════════════════════════════
+      //  CANDIDATE CHECK
+      // ════════════════════════════════════════════
+      async function checkCandidate() {
+        const prenom = document.getElementById("inp-prenom").value.trim();
+        const nom = document.getElementById("inp-nom").value.trim();
+        const errEl = document.getElementById("identity-error");
+        errEl.style.display = "none";
+        if (!prenom || !nom) {
           showToast("Veuillez saisir votre prénom et votre nom.");
           return;
         }
-        state.prenom = p;
-        state.nom = n;
-        document.getElementById("display-name").textContent = `${p} ${n}`;
+        const cand = candidates.find(
+          (c) =>
+            normalise(c.prenom) === normalise(prenom) &&
+            normalise(c.nom) === normalise(nom),
+        );
+        if (!cand) {
+          errEl.textContent =
+            "❌ Vous n'êtes pas inscrit(e) sur la liste des candidats. Contactez un administrateur.";
+          errEl.style.display = "block";
+          return;
+        }
+        if (cand.status === "blocked") {
+          errEl.textContent =
+            "🚫 Votre accès a été bloqué. Contactez un administrateur.";
+          errEl.style.display = "block";
+          return;
+        }
+        if (cand.status === "done") {
+          errEl.textContent =
+            "✅ Vous avez déjà passé cet examen. Contactez un administrateur pour repasser.";
+          errEl.style.display = "block";
+          return;
+        }
+        // OK — start exam
+        examState.prenom = cand.prenom;
+        examState.nom = cand.nom;
+        examState.candidateId = cand.id;
+        examState.currentQ = 0;
+        examState.answers = new Array(QUESTIONS.length).fill(null);
+        examState.secondsLeft = EXAM_DURATION;
+        examState.submitted = false;
+        document.getElementById("display-name").textContent =
+          `${cand.prenom} ${cand.nom}`;
         buildDots();
         renderQuestion();
         startTimer();
         showScreen("screen-exam");
       }
 
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       //  TIMER
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       function startTimer() {
         const el = document.getElementById("timer-display");
-        state.timerInterval = setInterval(() => {
-          state.secondsLeft--;
-          const m = Math.floor(state.secondsLeft / 60);
-          const s = state.secondsLeft % 60;
+        examState.timerInterval = setInterval(() => {
+          examState.secondsLeft--;
+          const m = Math.floor(examState.secondsLeft / 60),
+            s = examState.secondsLeft % 60;
           el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
           el.className = "timer";
-          if (state.secondsLeft <= 120) el.classList.add("warning");
-          if (state.secondsLeft <= 30) el.classList.add("danger");
-          if (state.secondsLeft <= 0) {
-            clearInterval(state.timerInterval);
+          if (examState.secondsLeft <= 120) el.classList.add("warning");
+          if (examState.secondsLeft <= 30) el.classList.add("danger");
+          if (examState.secondsLeft <= 0) {
+            clearInterval(examState.timerInterval);
             el.textContent = "00:00";
             submitExam(true);
           }
         }, 1000);
       }
 
-      // ══════════════════════════════════════════════
-      //  DOTS
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
+      //  DOTS & RENDER
+      // ════════════════════════════════════════════
       function buildDots() {
         const c = document.getElementById("dots-container");
         c.innerHTML = "";
@@ -1053,7 +1568,7 @@
           d.textContent = i + 1;
           d.title = `Question ${i + 1}`;
           d.onclick = () => {
-            state.currentQ = i;
+            examState.currentQ = i;
             renderQuestion();
           };
           c.appendChild(d);
@@ -1064,23 +1579,19 @@
           const d = document.getElementById(`dot-${i}`);
           if (!d) return;
           d.className = "dot";
-          if (state.answers[i] !== null) d.classList.add("answered");
-          if (i === state.currentQ) d.classList.add("current");
+          if (examState.answers[i] !== null) d.classList.add("answered");
+          if (i === examState.currentQ) d.classList.add("current");
         });
       }
-
-      // ══════════════════════════════════════════════
-      //  RENDER QUESTION
-      // ══════════════════════════════════════════════
       function renderQuestion() {
-        const i = state.currentQ;
-        const q = QUESTIONS[i];
+        const i = examState.currentQ,
+          q = QUESTIONS[i];
         document.getElementById("q-number").textContent =
           `Question ${String(i + 1).padStart(2, "0")}`;
         document.getElementById("q-text").textContent = q.q;
         document.getElementById("progress-text").textContent =
           `Question ${i + 1} / ${QUESTIONS.length}`;
-        const answered = state.answers.filter((a) => a !== null).length;
+        const answered = examState.answers.filter((a) => a !== null).length;
         document.getElementById("answered-count").textContent =
           `${answered} répondues`;
         document.getElementById("progress-fill").style.width =
@@ -1091,7 +1602,7 @@
           const div = document.createElement("div");
           div.className =
             "choice" +
-            (state.answers[i] === ch.l.toLowerCase() ? " selected" : "");
+            (examState.answers[i] === ch.l.toLowerCase() ? " selected" : "");
           div.innerHTML = `<div class="choice-letter">${ch.l}</div><div class="choice-text">${ch.t}</div>`;
           div.onclick = () => selectAnswer(ch.l.toLowerCase());
           cc.appendChild(div);
@@ -1099,36 +1610,32 @@
         document.getElementById("btn-prev").disabled = i === 0;
         document.getElementById("btn-next").disabled =
           i === QUESTIONS.length - 1;
-        const allAnswered = state.answers.every((a) => a !== null);
+        const allAnswered = examState.answers.every((a) => a !== null);
         document.getElementById("btn-submit").disabled = !allAnswered;
         document.getElementById("submit-note").textContent = allAnswered
           ? "Toutes les questions sont répondues !"
           : `${QUESTIONS.length - answered} question(s) sans réponse`;
         updateDots();
       }
-
-      // ══════════════════════════════════════════════
-      //  SELECT / NAVIGATE
-      // ══════════════════════════════════════════════
       function selectAnswer(letter) {
-        state.answers[state.currentQ] = letter;
+        examState.answers[examState.currentQ] = letter;
         renderQuestion();
       }
       function navigate(dir) {
-        const next = state.currentQ + dir;
-        if (next >= 0 && next < QUESTIONS.length) {
-          state.currentQ = next;
+        const n = examState.currentQ + dir;
+        if (n >= 0 && n < QUESTIONS.length) {
+          examState.currentQ = n;
           renderQuestion();
         }
       }
 
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       //  SUBMIT
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       function confirmSubmit() {
-        const unanswered = state.answers.filter((a) => a === null).length;
-        if (unanswered > 0) {
-          showToast(`Il reste ${unanswered} question(s) sans réponse.`);
+        const u = examState.answers.filter((a) => a === null).length;
+        if (u > 0) {
+          showToast(`Il reste ${u} question(s) sans réponse.`);
           return;
         }
         if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?"))
@@ -1136,27 +1643,47 @@
       }
 
       async function submitExam(timeUp) {
-        if (state.submitted) return;
-        state.submitted = true;
-        clearInterval(state.timerInterval);
-        const usedSeconds = EXAM_DURATION - state.secondsLeft;
-        const mins = Math.floor(usedSeconds / 60);
-        const secs = usedSeconds % 60;
-        const tempsUtilise = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+        if (examState.submitted) return;
+        examState.submitted = true;
+        clearInterval(examState.timerInterval);
+        const usedSec = EXAM_DURATION - examState.secondsLeft;
+        const mins = Math.floor(usedSec / 60),
+          secs = usedSec % 60;
+        const temps = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
         let score = 0;
-        state.answers.forEach((ans, i) => {
+        examState.answers.forEach((ans, i) => {
           if (ans === QUESTIONS[i].answer) score++;
         });
+
+        // Mark candidate as done
+        const cand = candidates.find((c) => c.id === examState.candidateId);
+        if (cand) {
+          cand.status = "done";
+          await store.set(STORAGE_KEY_CANDIDATES, candidates);
+        }
+
+        // Save result locally
+        examResults.push({
+          nom: examState.nom,
+          prenom: examState.prenom,
+          score,
+          temps,
+          date: new Date().toLocaleString("fr-FR"),
+          soumissionAuto: timeUp ? "OUI" : "NON",
+        });
+        await store.set(STORAGE_KEY_RESULTS, examResults);
+
+        // Send to Google Sheets
         const payload = {
-          nom: state.nom,
-          prenom: state.prenom,
+          nom: examState.nom,
+          prenom: examState.prenom,
           dateHeure: new Date().toLocaleString("fr-FR"),
           score,
-          tempsUtilise,
+          tempsUtilise: temps,
           soumissionAutomatique: timeUp ? "OUI" : "NON",
         };
         QUESTIONS.forEach((_, i) => {
-          payload[`Q${i + 1}`] = state.answers[i] || "—";
+          payload[`Q${i + 1}`] = examState.answers[i] || "—";
         });
         if (GOOGLE_SCRIPT_URL) {
           document.getElementById("sending-overlay").classList.add("show");
@@ -1168,16 +1695,16 @@
               body: JSON.stringify(payload),
             });
           } catch (e) {
-            console.warn("Envoi échoué :", e);
+            console.warn(e);
           }
           document.getElementById("sending-overlay").classList.remove("show");
         }
-        showResults(score, tempsUtilise, timeUp);
+        showResults(score, temps, timeUp);
       }
 
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       //  RESULTS
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       function showResults(score, temps, timeUp) {
         document.getElementById("res-score").textContent = score;
         let msg, sub;
@@ -1201,39 +1728,32 @@
         const list = document.getElementById("results-list");
         list.innerHTML = "";
         QUESTIONS.forEach((q, i) => {
-          const userAns = state.answers[i] || "—";
-          const correct = q.answer;
-          const isOk = userAns === correct;
+          const userAns = examState.answers[i] || "—",
+            correct = q.answer,
+            isOk = userAns === correct;
           const choiceText = (l) => {
             const c = q.choices.find((ch) => ch.l.toLowerCase() === l);
             return c ? `${c.l}. ${c.t}` : l;
           };
           const div = document.createElement("div");
           div.className = `result-item ${isOk ? "correct" : "wrong"}`;
-          div.innerHTML = `
-            <div class="result-icon">${isOk ? "✓" : "✗"}</div>
-            <div>
-              <div class="result-q">Q${i + 1}. ${q.q.substring(0, 70)}${q.q.length > 70 ? "…" : ""}</div>
-              <div class="result-detail">
-                ${
-                  isOk
-                    ? `<em>${choiceText(correct)}</em>`
-                    : `Votre réponse : <s>${choiceText(userAns)}</s> · Bonne réponse : <em>${choiceText(correct)}</em>`
-                }
-              </div>
-            </div>`;
+          div.innerHTML = `<div class="result-icon">${isOk ? "✓" : "✗"}</div><div>
+      <div class="result-q">Q${i + 1}. ${q.q.substring(0, 70)}${q.q.length > 70 ? "…" : ""}</div>
+      <div class="result-detail">${isOk ? `<em>${choiceText(correct)}</em>` : `Votre réponse : <s>${choiceText(userAns)}</s> · Bonne réponse : <em>${choiceText(correct)}</em>`}</div>
+    </div>`;
           list.appendChild(div);
         });
         showScreen("screen-results");
       }
 
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       //  TOAST
-      // ══════════════════════════════════════════════
+      // ════════════════════════════════════════════
       let toastTimer;
-      function showToast(msg) {
+      function showToast(msg, type = "") {
         const t = document.getElementById("toast");
         t.textContent = msg;
+        t.className = "toast" + (type === "error" ? " error" : "");
         t.classList.add("show");
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
@@ -1246,8 +1766,302 @@
             .getElementById("screen-identity")
             .classList.contains("active")
         )
-          startExam();
+          checkCandidate();
+        if (
+          e.key === "Enter" &&
+          document
+            .getElementById("screen-admin-login")
+            .classList.contains("active")
+        )
+          loginAdmin();
       });
+
+      // ════════════════════════════════════════════
+      //  QUESTIONS
+      // ════════════════════════════════════════════
+      const QUESTIONS = [
+        {
+          q: "Dans un tableur, la cellule A1 contient 200 et la cellule A2 contient 50. Quelle formule affiche le pourcentage que représente A2 par rapport à A1 ?",
+          choices: [
+            { l: "A", t: "=A1/A2*100" },
+            { l: "B", t: "=A2-A1" },
+            { l: "C", t: "=A2/A1*100" },
+            { l: "D", t: "=A1*A2/100" },
+          ],
+          answer: "c",
+        },
+        {
+          q: "Quelle est la différence entre « Enregistrer » et « Enregistrer sous » dans un traitement de texte ?",
+          choices: [
+            {
+              l: "A",
+              t: "« Enregistrer » crée une copie du fichier, « Enregistrer sous » met à jour l'original.",
+            },
+            {
+              l: "B",
+              t: "« Enregistrer » met à jour le fichier existant, « Enregistrer sous » crée un nouveau fichier ou change l'emplacement.",
+            },
+            { l: "C", t: "Les deux fonctions font exactement la même chose." },
+            {
+              l: "D",
+              t: "« Enregistrer sous » supprime l'ancienne version du fichier automatiquement.",
+            },
+          ],
+          answer: "b",
+        },
+        {
+          q: "Quel format de fichier est le plus adapté pour partager un document dont on veut préserver la mise en forme et empêcher les modifications faciles ?",
+          choices: [
+            { l: "A", t: ".docx" },
+            { l: "B", t: ".txt" },
+            { l: "C", t: ".xlsx" },
+            { l: "D", t: ".pdf" },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Dans un moteur de recherche, quel opérateur permet de chercher une expression exacte ?",
+          choices: [
+            { l: "A", t: "Des parenthèses : (intelligence artificielle)" },
+            { l: "B", t: 'Des guillemets : "intelligence artificielle"' },
+            { l: "C", t: "Un astérisque : *intelligence artificielle*" },
+            { l: "D", t: "Un signe plus : +intelligence artificielle" },
+          ],
+          answer: "b",
+        },
+        {
+          q: "Dans un tableur, les cellules C2 à C6 contiennent les valeurs 8, 12, 5, 15, 10. Que retourne la formule =MAX(C2:C6) ?",
+          choices: [
+            { l: "A", t: "10" },
+            { l: "B", t: "50" },
+            { l: "C", t: "15" },
+            { l: "D", t: "12" },
+          ],
+          answer: "c",
+        },
+        {
+          q: "Soit la feuille suivante dans un tableur (colonne A = NOM, colonne B = NOTE). Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",
+          choices: [
+            { l: "A", t: "=MAX(B2:B8)" },
+            { l: "B", t: "=SOMME(A2:A8)" },
+            { l: "C", t: "=MOYENNE(A2:A8)" },
+            { l: "D", t: "=MOYENNE(B2:B8)" },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",
+          choices: [
+            {
+              l: "A",
+              t: "Un type de filtre utilisé pour améliorer la qualité des photos.",
+            },
+            {
+              l: "B",
+              t: "Un espace virtuel où les utilisateurs peuvent discuter en privé.",
+            },
+            {
+              l: "C",
+              t: "Un algorithme qui montre uniquement du contenu similaire à celui déjà consulté par l'utilisateur.",
+            },
+            { l: "D", t: "Un groupe de hashtags populaires." },
+          ],
+          answer: "c",
+        },
+        {
+          q: "Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",
+          choices: [
+            { l: "A", t: "Facebook" },
+            { l: "B", t: "Twitter" },
+            { l: "C", t: "LinkedIn" },
+            { l: "D", t: "Instagram" },
+          ],
+          answer: "c",
+        },
+        {
+          q: "Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",
+          choices: [
+            { l: "A", t: "Phishing" },
+            { l: "B", t: "Spoofing" },
+            { l: "C", t: "Harcèlement en ligne" },
+            { l: "D", t: "Impersonation" },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",
+          choices: [
+            { l: "A", t: "Follower farming" },
+            { l: "B", t: "Social spamming" },
+            { l: "C", t: "Astroturfing" },
+            { l: "D", t: "Hashtagging" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "Qu'est-ce que le « droit à l'oubli » sur Internet ?",
+          choices: [
+            {
+              l: "A",
+              t: "Le droit de supprimer son compte sur n'importe quel réseau social sans justification.",
+            },
+            {
+              l: "B",
+              t: "Le droit de ne pas être photographié dans un lieu public.",
+            },
+            {
+              l: "C",
+              t: "Le droit de demander la suppression de ses données personnelles auprès d'un service en ligne.",
+            },
+            {
+              l: "D",
+              t: "Le droit d'accéder anonymement à tous les services en ligne sans créer de compte.",
+            },
+          ],
+          answer: "c",
+        },
+        {
+          q: "Qu'est-ce qu'un mot de passe fort ?",
+          choices: [
+            {
+              l: "A",
+              t: "Un mot de passe composé uniquement de lettres minuscules facile à retenir.",
+            },
+            {
+              l: "B",
+              t: "Un mot de passe combinant majuscules, minuscules, chiffres et caractères spéciaux d'au moins 12 caractères.",
+            },
+            {
+              l: "C",
+              t: "Un mot de passe identique sur tous vos comptes pour ne pas l'oublier.",
+            },
+            {
+              l: "D",
+              t: "Un mot de passe composé de votre prénom suivi de votre année de naissance.",
+            },
+          ],
+          answer: "b",
+        },
+        {
+          q: "Qu'est-ce que le phishing (hameçonnage) ?",
+          choices: [
+            {
+              l: "A",
+              t: "Une technique de compression de fichiers pour les envoyer par email.",
+            },
+            {
+              l: "B",
+              t: "Un logiciel permettant de filtrer les spams dans une boîte mail.",
+            },
+            {
+              l: "C",
+              t: "Un virus qui chiffre les fichiers de l'ordinateur et demande une rançon.",
+            },
+            {
+              l: "D",
+              t: "Une tentative frauduleuse d'obtenir des informations personnelles en se faisant passer pour une entité de confiance.",
+            },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Parmi ces propositions, laquelle décrit le mieux le rôle d'un système d'exploitation ?",
+          choices: [
+            {
+              l: "A",
+              t: "Gérer les ressources matérielles et logicielles de l'ordinateur et faire l'interface entre l'utilisateur et la machine.",
+            },
+            {
+              l: "B",
+              t: "Permettre uniquement la connexion à Internet et la navigation sur le web.",
+            },
+            {
+              l: "C",
+              t: "Créer et modifier des documents texte, des tableurs et des présentations.",
+            },
+            {
+              l: "D",
+              t: "Protéger l'ordinateur contre les virus et les logiciels malveillants.",
+            },
+          ],
+          answer: "a",
+        },
+        {
+          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x après l'exécution de cet algorithme ?",
+          choices: [
+            { l: "A", t: "5" },
+            { l: "B", t: "6" },
+            { l: "C", t: "4" },
+            { l: "D", t: "8" },
+          ],
+          answer: "b",
+        },
+        {
+          q: "Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 100, x = x + 5 ». Combien d'itérations sont nécessaires pour que l'algorithme s'arrête ?",
+          choices: [
+            { l: "A", t: "20" },
+            { l: "B", t: "19" },
+            { l: "C", t: "21" },
+            { l: "D", t: "25" },
+          ],
+          answer: "a",
+        },
+        {
+          q: "Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x si n = 4 ?",
+          choices: [
+            { l: "A", t: "i" },
+            { l: "B", t: "4" },
+            { l: "C", t: "15" },
+            { l: "D", t: "10" },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Qu'est-ce qu'une bibliographie dans un document textuel ?",
+          choices: [
+            { l: "A", t: "Une liste des éditeurs potentiels du document." },
+            {
+              l: "B",
+              t: "Une liste des sources et des références citées dans le document.",
+            },
+            {
+              l: "C",
+              t: "Une section du document réservée aux graphiques et aux images.",
+            },
+            {
+              l: "D",
+              t: "Une section du document contenant des exemples pratiques.",
+            },
+          ],
+          answer: "b",
+        },
+        {
+          q: "Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",
+          choices: [
+            { l: "A", t: "La facilité d'accès au document sur Internet." },
+            { l: "B", t: "La simplicité du langage utilisé dans le document." },
+            { l: "C", t: "La convivialité du design du document." },
+            {
+              l: "D",
+              t: "L'adaptation du document pour qu'il soit utilisable par un large public, y compris les personnes handicapées.",
+            },
+          ],
+          answer: "d",
+        },
+        {
+          q: "Qu'est-ce qu'une infographie ?",
+          choices: [
+            { l: "A", t: "Un type de diagramme à secteurs." },
+            { l: "B", t: "Une représentation visuelle des données." },
+            { l: "C", t: "Un texte explicatif d'un tableau de données." },
+            { l: "D", t: "Un document qui agrège les données entre elles." },
+          ],
+          answer: "b",
+        },
+      ];
+
+      // ── BOOT ──
+      init();
     </script>
   </body>
 </html>
