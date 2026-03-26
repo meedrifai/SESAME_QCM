@@ -773,7 +773,21 @@
     <header class="app-header">
       <div class="logo-block">
         <!-- Logo placeholder — remplacez src par votre logo réel -->
-        <div class="logo-img-placeholder" id="logo-placeholder">
+        <img
+          src="logo.jpeg"
+          class="logo-img"
+          alt="Logo"
+          onerror="
+            this.style.display = 'none';
+            document.getElementById('logo-fallback').style.display = 'flex';
+          "
+          id="logo-img"
+        />
+        <div
+          class="logo-img-placeholder"
+          id="logo-fallback"
+          style="display: none"
+        >
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
@@ -980,10 +994,35 @@
         <!-- TAB: RÉSULTATS -->
         <div class="admin-panel" id="tab-results">
           <p
-            style="font-size: 0.85rem; color: var(--muted); margin-bottom: 16px"
+            style="font-size: 0.85rem; color: var(--muted); margin-bottom: 24px"
           >
-            Résultats des candidats ayant terminé l'examen, stockés localement.
+            Les résultats sont enregistrés automatiquement dans Google Sheets.
+            Cliquez ci-dessous pour les consulter en temps réel.
           </p>
+          <a
+            href="https://docs.google.com/spreadsheets/d/1jt5UL7xx1SqI6wKjBDATVtfV3Tz-uw4QA8DjmoVZL4g/edit?gid=0#gid=0"
+            target="_blank"
+            class="btn btn-primary"
+            style="display: inline-flex; margin-bottom: 28px"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+            Ouvrir Google Sheets
+          </a>
           <div id="results-admin-list"></div>
         </div>
 
@@ -1206,17 +1245,7 @@
         showScreen("screen-identity");
       }
 
-      function applyBranding() {
-        const placeholder = document.getElementById("logo-placeholder");
-        if (appSettings.logoUrl) {
-          const img = document.createElement("img");
-          img.src = appSettings.logoUrl;
-          img.className = "logo-img";
-          img.alt = "Logo";
-          img.onerror = () => {}; // keep placeholder on error
-          placeholder.replaceWith(img);
-        }
-      }
+      function applyBranding() {}
 
       // ════════════════════════════════════════════
       //  SCREENS
@@ -1423,11 +1452,6 @@
       // ─── RESULTS ADMIN ───
       function renderResultsAdmin() {
         const el = document.getElementById("results-admin-list");
-        if (examResults.length === 0) {
-          el.innerHTML =
-            '<div class="empty-state">Aucun résultat enregistré localement.</div>';
-          return;
-        }
         el.innerHTML = examResults
           .slice()
           .reverse()
