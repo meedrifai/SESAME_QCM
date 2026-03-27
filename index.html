@@ -499,7 +499,10 @@ async function addCandidate() {
     } else {
       showToast(res.error || "Erreur.", "error");
     }
-  } catch(e) { showToast("Erreur de connexion.", "error"); }
+  } 
+  catch(e) { console.error(e);
+      showToast("Erreur de connexion.", "error"); 
+        }
 
   btn.disabled = false; btn.textContent = "+ Ajouter";
 }
