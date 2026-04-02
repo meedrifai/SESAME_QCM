@@ -600,6 +600,7 @@ async function addCandidate() {
 async function cycleModuleStatus(candidateId, module) {
   const c = candidates.find(c => c.id === candidateId);
   if (!c) return;
+  if (!c.modules) c.modules = { digital:"none", docs:"none" };
   const current = c.modules[module] || "none";
   // Cycle: none → active → blocked → none  (done stays until manual reset)
   const cycle = { none:"active", active:"blocked", blocked:"none", done:"active" };
