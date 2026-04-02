@@ -3,15 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SESAME — Simulation Compétences Digitales</title>
+<title>SESAME — Simulation Examens</title>
 <link rel="icon" type="image/jpeg" href="logo.jpeg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#f5f2eb;--surface:#fffefb;--accent:#1a3a5c;--accent2:#e8533a;--accent3:#2e8b6e;--text:#1c1c1e;--muted:#6b6b6b;--border:#ddd8cc;--card-shadow:0 2px 20px rgba(26,58,92,.08),0 1px 4px rgba(26,58,92,.04);--radius:14px}
+:root{
+  --bg:#f5f2eb;--surface:#fffefb;--accent:#1a3a5c;--accent2:#e8533a;--accent3:#2e8b6e;
+  --text:#1c1c1e;--muted:#6b6b6b;--border:#ddd8cc;
+  --card-shadow:0 2px 20px rgba(26,58,92,.08),0 1px 4px rgba(26,58,92,.04);--radius:14px;
+  --module-digital:#1a3a5c;--module-docs:#6b3fa0;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 60px}
-.app-header{width:100%;max-width:720px;display:flex;justify-content:space-between;align-items:center;padding:18px 0 28px;border-bottom:1.5px solid var(--border);margin-bottom:36px}
+.app-header{width:100%;max-width:860px;display:flex;justify-content:space-between;align-items:center;padding:18px 0 28px;border-bottom:1.5px solid var(--border);margin-bottom:36px}
 .logo-block{display:flex;align-items:center;gap:14px}
 .logo-img{width:80px;height:80px;border-radius:10px;object-fit:contain;background:#fff;border:1.5px solid var(--border);padding:4px}
 .logo-img-placeholder{width:44px;height:44px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -19,18 +24,39 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 .logo{font-family:"DM Serif Display",serif;font-size:1.5rem;color:var(--accent);letter-spacing:-.5px}
 .logo span{color:var(--accent2);font-style:italic}
 .tag{font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:var(--border);padding:4px 10px;border-radius:99px}
-.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--card-shadow);padding:36px 40px;width:100%;max-width:720px;border:1px solid var(--border);animation:fadeUp .45s cubic-bezier(.22,.68,0,1.2) both}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--card-shadow);padding:36px 40px;width:100%;max-width:860px;border:1px solid var(--border);animation:fadeUp .45s cubic-bezier(.22,.68,0,1.2) both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .screen{display:none}.screen.active{display:block}
+/* ── IDENTITY ── */
 .identity-title{font-family:"DM Serif Display",serif;font-size:1.9rem;color:var(--accent);line-height:1.2;margin-bottom:8px}
 .identity-sub{color:var(--muted);font-size:.92rem;margin-bottom:32px;line-height:1.5}
 .field-group{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 @media(max-width:480px){.field-group{grid-template-columns:1fr}.card{padding:24px 20px}}
 .field label{display:block;font-size:.78rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.field input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:"DM Sans",sans-serif;font-size:1rem;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
-.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
+.field input,.field select{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:"DM Sans",sans-serif;font-size:1rem;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,92,.1)}
 .rules{background:rgba(26,58,92,.05);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:14px 16px;font-size:.88rem;color:var(--accent);margin-bottom:28px;line-height:1.6}
 .rules strong{font-weight:600}
+/* ── MODULE CARDS ── */
+.module-picker{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+@media(max-width:520px){.module-picker{grid-template-columns:1fr}}
+.module-card{border:2px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;background:var(--bg);position:relative}
+.module-card:hover:not(.disabled){border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,58,92,.1)}
+.module-card.selected{border-color:var(--accent);background:rgba(26,58,92,.04)}
+.module-card.disabled{opacity:.45;cursor:not-allowed}
+.module-card.done-state{border-color:var(--accent3);background:rgba(46,139,110,.04)}
+.module-card.blocked-state{border-color:var(--accent2);background:rgba(232,83,58,.04)}
+.module-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:1.2rem}
+.module-icon.digital{background:rgba(26,58,92,.12)}
+.module-icon.docs{background:rgba(107,63,160,.12)}
+.module-card-title{font-family:"DM Serif Display",serif;font-size:1.05rem;color:var(--text);margin-bottom:4px}
+.module-card-sub{font-size:.78rem;color:var(--muted);line-height:1.4}
+.module-badge{position:absolute;top:12px;right:12px;font-size:.65rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:99px}
+.badge-active{background:rgba(46,139,110,.15);color:var(--accent3)}
+.badge-done{background:rgba(26,58,92,.12);color:var(--accent)}
+.badge-blocked{background:rgba(232,83,58,.12);color:var(--accent2)}
+.badge-none{background:var(--border);color:var(--muted)}
+/* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border:none;border-radius:9px;font-family:"DM Sans",sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .15s,opacity .15s;text-decoration:none;white-space:nowrap}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--accent);color:#fff;box-shadow:0 3px 12px rgba(26,58,92,.3)}
@@ -39,71 +65,31 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 .btn-secondary:hover{background:rgba(26,58,92,.04)}
 .btn-danger{background:var(--accent2);color:#fff;box-shadow:0 3px 12px rgba(232,83,58,.3)}
 .btn-success{background:var(--accent3);color:#fff;box-shadow:0 3px 12px rgba(46,139,110,.3)}
+.btn-purple{background:#6b3fa0;color:#fff;box-shadow:0 3px 12px rgba(107,63,160,.3)}
 .btn-sm{padding:7px 14px;font-size:.82rem}
 .btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
-/* EXAM */
-.exam-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:10px}
-.student-name{font-size:.88rem;color:var(--muted)}.student-name strong{color:var(--text)}
-.timer{font-family:"DM Serif Display",serif;font-size:1.6rem;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:6px}
-.timer.warning{color:#c0700a;animation:pulse 1s infinite}
-.timer.danger{color:var(--accent2);animation:pulse .5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.progress-block{margin-bottom:24px}
-.progress-info{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:7px}
-.progress-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#2e7bb8);border-radius:99px;transition:width .4s ease}
-.answered-dots{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
-.dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:.6rem;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .2s,border-color .2s;font-weight:600}
-.dot.answered{background:var(--accent);border-color:var(--accent);color:#fff}
-.dot.current{border-color:var(--accent2);color:var(--accent2)}
-.dot.answered.current{background:var(--accent2);border-color:var(--accent2);color:#fff}
-.question-number{font-size:.75rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.question-text{font-family:"DM Serif Display",serif;font-size:1.25rem;color:var(--text);line-height:1.45;margin-bottom:24px}
-.choices{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.choice{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .2s,background .2s,transform .1s;background:var(--bg)}
-.choice:hover{border-color:var(--accent);background:rgba(26,58,92,.03);transform:translateX(2px)}
-.choice.selected{border-color:var(--accent);background:rgba(26,58,92,.07)}
-.choice-letter{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;color:var(--muted);transition:background .2s,border-color .2s,color .2s}
-.choice.selected .choice-letter{background:var(--accent);border-color:var(--accent);color:#fff}
-.choice-text{font-size:.95rem;line-height:1.45;padding-top:2px}
-.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.nav-center{text-align:center}
-.submit-note{text-align:center;font-size:.78rem;color:var(--muted);margin-top:10px}
-/* RESULTS */
-.score-hero{text-align:center;padding:10px 0 30px}
-.score-circle{width:120px;height:120px;border-radius:50%;border:5px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(26,58,92,.05)}
-.score-number{font-family:"DM Serif Display",serif;font-size:2.4rem;color:var(--accent);line-height:1}
-.score-denom{font-size:.8rem;color:var(--muted);font-weight:500}
-.score-msg{font-family:"DM Serif Display",serif;font-size:1.3rem;color:var(--text);margin-bottom:6px}
-.score-sub{font-size:.88rem;color:var(--muted)}
-.results-list{margin-top:24px;display:flex;flex-direction:column;gap:8px}
-.result-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:9px;font-size:.88rem;line-height:1.4;border:1px solid transparent}
-.result-item.correct{background:rgba(46,139,110,.08);border-color:rgba(46,139,110,.2)}
-.result-item.wrong{background:rgba(232,83,58,.07);border-color:rgba(232,83,58,.18)}
-.result-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
-.result-q{font-weight:500;color:var(--text)}
-.result-detail{color:var(--muted);font-size:.82rem}
-.result-detail em{color:var(--accent3);font-style:normal;font-weight:600}
-.result-detail s{color:var(--accent2)}
-/* ADMIN */
+/* ── ADMIN ── */
 .admin-section-title{font-family:"DM Serif Display",serif;font-size:1.4rem;color:var(--accent);margin-bottom:20px}
 .admin-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:1.5px solid var(--border)}
 .admin-tab{padding:10px 20px;font-size:.88rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1.5px;transition:color .2s,border-color .2s}
 .admin-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .admin-panel{display:none}.admin-panel.active{display:block}
-.candidate-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);margin-bottom:8px;flex-wrap:wrap}
-.candidate-info{flex:1;min-width:120px}
+.candidate-row{display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);margin-bottom:8px;flex-wrap:wrap}
+.candidate-info{flex:1;min-width:140px}
 .candidate-name-text{font-weight:600;font-size:.95rem;color:var(--text)}
 .candidate-meta{font-size:.75rem;color:var(--muted);margin-top:2px}
-.status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:.73rem;font-weight:600;white-space:nowrap}
-.badge-active{background:rgba(46,139,110,.12);color:var(--accent3)}
-.badge-blocked{background:rgba(232,83,58,.1);color:var(--accent2)}
-.badge-done{background:rgba(26,58,92,.1);color:var(--accent)}
-.dot-status{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
-.dot-active{background:var(--accent3)}.dot-blocked{background:var(--accent2)}.dot-done{background:var(--accent)}
+.module-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.module-toggle{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:.75rem;font-weight:600;transition:all .15s;white-space:nowrap}
+.module-toggle:hover{border-color:var(--accent)}
+.module-toggle.active-state{border-color:var(--accent3);background:rgba(46,139,110,.08);color:var(--accent3)}
+.module-toggle.blocked-state{border-color:var(--accent2);background:rgba(232,83,58,.08);color:var(--accent2)}
+.module-toggle.done-state{border-color:var(--accent);background:rgba(26,58,92,.08);color:var(--accent)}
+.module-toggle.none-state{border-color:var(--border);color:var(--muted)}
+.module-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
 .add-form{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;margin-bottom:24px;align-items:end}
 @media(max-width:560px){.add-form{grid-template-columns:1fr 1fr}.add-form .btn{grid-column:1/-1}}
-.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:600px){.stat-cards{grid-template-columns:repeat(2,1fr)}}
 .stat-card{background:rgba(26,58,92,.05);border-radius:10px;padding:14px 16px;text-align:center}
 .stat-number{font-family:"DM Serif Display",serif;font-size:1.8rem;color:var(--accent)}
 .stat-label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
@@ -121,6 +107,98 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 .access-denied{background:rgba(232,83,58,.07);border:1px solid rgba(232,83,58,.2);border-radius:10px;padding:16px 18px;margin-bottom:20px;font-size:.9rem;color:var(--accent2);line-height:1.5}
 .info-box{background:rgba(26,58,92,.05);border:1px solid rgba(26,58,92,.12);border-radius:9px;padding:12px 16px;font-size:.83rem;color:var(--accent);margin-bottom:20px;line-height:1.6}
 .loading-state{text-align:center;padding:40px 16px;color:var(--muted)}
+/* ── EXAM LAYOUT ── */
+.exam-wrapper{display:flex;gap:0;width:100%;max-width:860px;position:relative;animation:fadeUp .45s cubic-bezier(.22,.68,0,1.2) both}
+.exam-main{flex:1;min-width:0}
+/* PDF Panel */
+.pdf-panel{position:fixed;top:0;right:0;width:45%;max-width:600px;height:100vh;background:var(--surface);border-left:1.5px solid var(--border);box-shadow:-4px 0 24px rgba(26,58,92,.12);z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .35s cubic-bezier(.22,.68,0,1.2)}
+.pdf-panel.open{transform:translateX(0)}
+.pdf-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{font-family:"DM Serif Display",serif;font-size:1rem;color:var(--accent)}
+.pdf-frame{flex:1;width:100%;border:none}
+.pdf-toggle-btn{position:fixed;right:20px;bottom:80px;z-index:300;padding:10px 18px;border-radius:99px;font-size:.82rem;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:7px;box-shadow:0 4px 20px rgba(107,63,160,.35);cursor:pointer;border:none;font-family:"DM Sans",sans-serif;transition:transform .15s,box-shadow .15s}
+.pdf-toggle-btn:active{transform:scale(.97)}
+.pdf-toggle-btn.docs-mode{background:#6b3fa0;color:#fff}
+.pdf-toggle-btn.hidden{display:none}
+/* ── EXAM CARD ── */
+.exam-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--card-shadow);padding:36px 40px;border:1px solid var(--border)}
+@media(max-width:480px){.exam-card{padding:24px 20px}}
+.exam-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:10px}
+.student-name{font-size:.88rem;color:var(--muted)}.student-name strong{color:var(--text)}
+.timer{font-family:"DM Serif Display",serif;font-size:1.6rem;color:var(--accent);letter-spacing:1px;display:flex;align-items:center;gap:6px}
+.timer.warning{color:#c0700a;animation:pulse 1s infinite}
+.timer.danger{color:var(--accent2);animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.module-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.pill-digital{background:rgba(26,58,92,.1);color:var(--accent)}
+.pill-docs{background:rgba(107,63,160,.1);color:#6b3fa0}
+.progress-block{margin-bottom:24px}
+.progress-info{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:7px}
+.progress-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#2e7bb8);border-radius:99px;transition:width .4s ease}
+.progress-fill.docs{background:linear-gradient(90deg,#6b3fa0,#9b6cd0)}
+.answered-dots{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);background:transparent;cursor:pointer;font-size:.6rem;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .2s,border-color .2s;font-weight:600}
+.dot.answered{background:var(--accent);border-color:var(--accent);color:#fff}
+.dot.answered.docs-module{background:#6b3fa0;border-color:#6b3fa0}
+.dot.current{border-color:var(--accent2);color:var(--accent2)}
+.dot.answered.current{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.question-section-label{font-size:.7rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:4px 10px;border-radius:99px;display:inline-block;margin-bottom:10px}
+.label-reperage{background:rgba(26,58,92,.1);color:var(--accent)}
+.label-analyse{background:rgba(46,139,110,.1);color:var(--accent3)}
+.label-synthese{background:rgba(232,83,58,.1);color:var(--accent2)}
+.question-number{font-size:.75rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.question-text{font-family:"DM Serif Display",serif;font-size:1.2rem;color:var(--text);line-height:1.45;margin-bottom:20px}
+.question-hint{font-size:.82rem;color:var(--muted);background:rgba(46,139,110,.07);border:1px solid rgba(46,139,110,.15);border-radius:8px;padding:8px 12px;margin-bottom:18px;line-height:1.5}
+/* Single choice */
+.choices{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.choice{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .2s,background .2s,transform .1s;background:var(--bg)}
+.choice:hover{border-color:var(--accent);background:rgba(26,58,92,.03);transform:translateX(2px)}
+.choice.selected{border-color:var(--accent);background:rgba(26,58,92,.07)}
+.choice-letter{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;flex-shrink:0;color:var(--muted);transition:background .2s,border-color .2s,color .2s}
+.choice.selected .choice-letter{background:var(--accent);border-color:var(--accent);color:#fff}
+.choice-text{font-size:.95rem;line-height:1.45;padding-top:2px}
+/* Multi choice */
+.choices-multi{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.choice-multi{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .2s,background .2s,transform .1s;background:var(--bg)}
+.choice-multi:hover{border-color:#6b3fa0;background:rgba(107,63,160,.03);transform:translateX(2px)}
+.choice-multi.selected{border-color:#6b3fa0;background:rgba(107,63,160,.07)}
+.choice-checkbox{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent;transition:background .2s,border-color .2s,color .2s}
+.choice-checkbox svg{width:12px;height:12px}
+.choice-multi.selected .choice-checkbox{background:#6b3fa0;border-color:#6b3fa0;color:#fff}
+/* Fill-in questions (synthesis) */
+.fill-group{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}
+.fill-item{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.fill-var{display:inline-block;font-family:"DM Serif Display",serif;font-size:.9rem;color:var(--accent);margin-bottom:8px;font-weight:600}
+.fill-choices{display:flex;flex-direction:column;gap:7px}
+.fill-choice{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:.9rem;transition:border-color .2s,background .2s;background:var(--surface)}
+.fill-choice:hover{border-color:var(--accent);background:rgba(26,58,92,.03)}
+.fill-choice.selected{border-color:var(--accent2);background:rgba(232,83,58,.06)}
+.fill-radio{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;transition:background .2s,border-color .2s}
+.fill-choice.selected .fill-radio{background:var(--accent2);border-color:var(--accent2)}
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.nav-center{text-align:center}
+.submit-note{text-align:center;font-size:.78rem;color:var(--muted);margin-top:10px}
+/* ── RESULTS ── */
+.score-hero{text-align:center;padding:10px 0 30px}
+.score-circle{width:120px;height:120px;border-radius:50%;border:5px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;background:rgba(26,58,92,.05)}
+.score-circle.docs{border-color:#6b3fa0;background:rgba(107,63,160,.05)}
+.score-number{font-family:"DM Serif Display",serif;font-size:2.4rem;color:var(--accent);line-height:1}
+.score-circle.docs .score-number{color:#6b3fa0}
+.score-denom{font-size:.8rem;color:var(--muted);font-weight:500}
+.score-msg{font-family:"DM Serif Display",serif;font-size:1.3rem;color:var(--text);margin-bottom:6px}
+.score-sub{font-size:.88rem;color:var(--muted)}
+.results-list{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+.result-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:9px;font-size:.88rem;line-height:1.4;border:1px solid transparent}
+.result-item.correct{background:rgba(46,139,110,.08);border-color:rgba(46,139,110,.2)}
+.result-item.wrong{background:rgba(232,83,58,.07);border-color:rgba(232,83,58,.18)}
+.result-item.partial{background:rgba(232,160,30,.07);border-color:rgba(232,160,30,.2)}
+.result-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.result-q{font-weight:500;color:var(--text)}
+.result-detail{color:var(--muted);font-size:.82rem;margin-top:3px}
+.result-detail em{color:var(--accent3);font-style:normal;font-weight:600}
+.result-detail s{color:var(--accent2)}
+/* ── MISC ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#fff;padding:12px 24px;border-radius:99px;font-size:.88rem;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:transform .3s cubic-bezier(.22,.68,0,1.2);z-index:999;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.error{background:var(--accent2)}.toast.success{background:var(--accent3)}
@@ -143,7 +221,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
     <div class="logo">SESAME <span>·</span> Exam</div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
-    <div class="tag">Compétences Digitales</div>
+    <div class="tag">Concours</div>
     <button class="nav-link" id="header-admin-btn" onclick="showAdminLogin()" style="display:none">Admin</button>
   </div>
 </header>
@@ -156,19 +234,30 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 <!-- ══ IDENTITY ══ -->
 <div id="screen-identity" class="screen">
   <div class="card">
-    <h1 class="identity-title">Simulation<br/>d'examen</h1>
-    <p class="identity-sub">Concours SESAME — Compétences Digitales<br/>Répondez à 20 questions en 20 minutes.</p>
+    <h1 class="identity-title">Simulations<br/>d'examens</h1>
+    <p class="identity-sub">Concours SESAME — Identifiez-vous pour accéder à vos modules.</p>
     <div class="field-group">
       <div class="field"><label>Prénom</label><input type="text" id="inp-prenom" placeholder="ex : Marie" autocomplete="given-name"/></div>
       <div class="field"><label>Nom</label><input type="text" id="inp-nom" placeholder="ex : Dupont" autocomplete="family-name"/></div>
     </div>
     <div id="identity-error" class="access-denied" style="display:none"></div>
-    <div class="rules"><strong>Règles :</strong> 20 questions · 1 seule bonne réponse · <strong>20 minutes</strong> au total.<br/>Vous pouvez naviguer librement entre les questions. Le test se soumet automatiquement à 0:00.</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-      <button class="btn btn-primary" id="btn-start" onclick="checkCandidate()">
+    <div id="module-select-section" style="display:none">
+      <p style="font-size:.82rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Vos modules disponibles</p>
+      <div class="module-picker" id="module-picker"></div>
+      <div class="rules"><strong>Règles :</strong> 20 questions · <strong>20 minutes</strong> au total. Vous pouvez naviguer librement entre les questions. Le test se soumet automatiquement à 0:00.</div>
+      <div id="module-error" class="access-denied" style="display:none">Veuillez sélectionner un module.</div>
+      <button class="btn btn-primary" id="btn-start-module" onclick="startSelectedModule()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5V3z" fill="currentColor"/></svg>
         Commencer l'examen
       </button>
+    </div>
+    <div id="check-btn-wrapper">
+      <button class="btn btn-primary" id="btn-check" onclick="checkCandidate()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5V3z" fill="currentColor"/></svg>
+        Vérifier mon accès
+      </button>
+    </div>
+    <div style="margin-top:16px">
       <button class="nav-link" onclick="showAdminLogin()">Accès administrateur</button>
     </div>
   </div>
@@ -198,8 +287,6 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
       <h1 class="admin-section-title" style="margin-bottom:0">Tableau de bord Admin</h1>
       <button class="nav-link" onclick="logoutAdmin()">Se déconnecter</button>
     </div>
-
-    <!-- Barre de sync -->
     <div class="sync-bar">
       <div class="sync-status">
         <span class="sync-dot loading" id="sync-dot"></span>
@@ -207,13 +294,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <button class="btn btn-secondary btn-sm" onclick="refreshCandidates()">↻ Actualiser</button>
     </div>
-
     <div class="stat-cards" id="admin-stats">
       <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Candidats</div></div>
-      <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Actifs</div></div>
-      <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Ont passé</div></div>
+      <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Digital actifs</div></div>
+      <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Docs actifs</div></div>
+      <div class="stat-card"><div class="stat-number">—</div><div class="stat-label">Ont passé (total)</div></div>
     </div>
-
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="switchTab('tab-candidates')">Candidats</button>
       <button class="admin-tab" onclick="switchTab('tab-results')">Résultats</button>
@@ -223,7 +309,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
     <!-- TAB CANDIDATS -->
     <div class="admin-panel active" id="tab-candidates">
       <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">
-        Liste <strong>centralisée dans Google Sheets</strong> — tous les administrateurs partagent les mêmes données en temps réel.
+        Pour chaque candidat, activez ou bloquez l'accès <strong>par module</strong> indépendamment.
       </p>
       <div class="add-form">
         <div class="field"><label>Prénom</label><input type="text" id="add-prenom" placeholder="ex : Marie" onkeydown="if(event.key==='Enter')addCandidate()"/></div>
@@ -239,23 +325,25 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
     <!-- TAB RÉSULTATS -->
     <div class="admin-panel" id="tab-results">
       <p style="font-size:.85rem;color:var(--muted);margin-bottom:24px">
-        Les résultats sont enregistrés automatiquement dans Google Sheets à chaque soumission.
+        Les résultats sont enregistrés dans Google Sheets séparément par module.
       </p>
-      <a href="https://docs.google.com/spreadsheets/d/1jt5UL7xx1SqI6wKjBDATVtfV3Tz-uw4QA8DjmoVZL4g/edit?gid=0#gid=0"
-         target="_blank" class="btn btn-primary" style="display:inline-flex">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-        </svg>
-        Ouvrir Google Sheets — Résultats
-      </a>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="https://docs.google.com/spreadsheets/d/1jt5UL7xx1SqI6wKjBDATVtfV3Tz-uw4QA8DjmoVZL4g/edit?gid=0#gid=0"
+           target="_blank" class="btn btn-primary" style="display:inline-flex;width:fit-content">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Résultats — Compétences Digitales
+        </a>
+        <a href="https://docs.google.com/spreadsheets/d/1jt5UL7xx1SqI6wKjBDATVtfV3Tz-uw4QA8DjmoVZL4g/edit#gid=1"
+           target="_blank" class="btn btn-purple" style="display:inline-flex;width:fit-content">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Résultats — Analyse Documentaire
+        </a>
+      </div>
     </div>
 
     <!-- TAB PARAMÈTRES -->
     <div class="admin-panel" id="tab-settings">
-      <div class="info-box">
-        ℹ️ Le mot de passe admin est stocké localement dans ce navigateur. Communiquez-le directement aux autres administrateurs.
-      </div>
+      <div class="info-box">ℹ️ Le mot de passe admin est stocké localement dans ce navigateur.</div>
       <div class="field" style="margin-bottom:16px">
         <label>Mot de passe actuel</label>
         <input type="password" id="setting-old-pwd" placeholder="Mot de passe actuel"/>
@@ -273,11 +361,14 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <!-- ══ EXAM ══ -->
-<div id="screen-exam" class="screen">
-  <div class="card">
+<div id="screen-exam" class="screen" style="width:100%;max-width:860px">
+  <div class="exam-card">
     <div class="exam-topbar">
-      <div class="student-name"><strong id="display-name">—</strong></div>
-      <div class="timer" id="timer-display">20:00</div>
+      <div>
+        <div class="student-name"><strong id="display-name">—</strong></div>
+        <div id="module-pill" style="margin-top:5px"></div>
+      </div>
+      <div id="timer-display" class="timer">20:00</div>
     </div>
     <div class="progress-block">
       <div class="progress-info">
@@ -287,9 +378,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
       <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:5%"></div></div>
       <div class="answered-dots" id="dots-container"></div>
     </div>
+    <div id="question-section-label-el"></div>
     <div class="question-number" id="q-number">Question 01</div>
     <div class="question-text" id="q-text"></div>
-    <div class="choices" id="q-choices"></div>
+    <div id="question-hint-el"></div>
+    <div id="q-choices-wrapper"></div>
     <div class="nav-row">
       <button class="btn btn-secondary" id="btn-prev" onclick="navigate(-1)">
         <svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L4 8l6 5V3z" fill="currentColor"/></svg>Précédent
@@ -305,11 +398,23 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
   </div>
 </div>
 
+<!-- ══ PDF PANEL ══ -->
+<div class="pdf-panel" id="pdf-panel">
+  <div class="pdf-header">
+    <span class="pdf-title">📄 Dossier documentaire</span>
+    <button class="btn btn-secondary btn-sm" onclick="togglePdf()">Fermer ✕</button>
+  </div>
+  <iframe class="pdf-frame" id="pdf-frame" src=""></iframe>
+</div>
+<button class="pdf-toggle-btn docs-mode hidden" id="pdf-toggle-btn" onclick="togglePdf()">
+  📄 Dossier documentaire
+</button>
+
 <!-- ══ RESULTS ══ -->
 <div id="screen-results" class="screen">
   <div class="card">
     <div class="score-hero">
-      <div class="score-circle">
+      <div class="score-circle" id="score-circle">
         <div class="score-number" id="res-score">—</div>
         <div class="score-denom">/ 20</div>
       </div>
@@ -331,41 +436,63 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 
 <script>
 // ══════════════════════════════════════════════════════════
-//  ⚠️  REMPLACEZ PAR L'URL DE VOTRE NOUVEAU DÉPLOIEMENT
-//      (après avoir mis à jour le Apps Script)
+//  CONFIG — remplacez par l'URL de votre déploiement Apps Script
 // ══════════════════════════════════════════════════════════
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
-
-const EXAM_DURATION     = 20 * 60;
-const ADMIN_PWD_KEY     = "sesame:adminPwd";
-const DEFAULT_ADMIN_PWD = "sesame2025";
+const SCRIPT_URL       = "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
+const EXAM_DURATION    = 20 * 60;
+const ADMIN_PWD_KEY    = "sesame:adminPwd";
+const DEFAULT_ADMIN_PWD= "sesame2025";
+// Chemin vers le PDF du dossier documentaire (à la racine du projet)
+const DOCS_PDF_PATH    = "dossier_documentaire.pdf";
 
 // ── STATE ──
 let candidates    = [];
 let adminPwd      = localStorage.getItem(ADMIN_PWD_KEY) || DEFAULT_ADMIN_PWD;
 let adminLoggedIn = false;
-let examState     = {
-  prenom:"", nom:"", currentQ:0,
-  answers: new Array(20).fill(null),
+let currentCandidateData = null; // { id, prenom, nom, modules }
+let selectedModule = null;       // "digital" | "docs"
+
+let examState = {
+  module: "digital", prenom:"", nom:"", currentQ:0,
+  answers: [],          // single: null | "a"/"b"/…   multi: null | [...]   fill: null | {w:…,x:…,…}
   timerInterval:null, secondsLeft:EXAM_DURATION,
   submitted:false, candidateId:null
 };
 
+let pdfOpen = false;
+
 // ══════════════════════════════════════════════════════════
-//  API HELPERS
+//  MODULE DEFINITIONS
+// ══════════════════════════════════════════════════════════
+const MODULE_CONFIG = {
+  digital: {
+    label: "Compétences Digitales",
+    icon: "💻",
+    color: "digital",
+    questions: QUESTIONS_DIGITAL,
+    hasPdf: false,
+    pdfPath: null
+  },
+  docs: {
+    label: "Analyse Documentaire",
+    icon: "📄",
+    color: "docs",
+    questions: QUESTIONS_DOCS,
+    hasPdf: true,
+    pdfPath: DOCS_PDF_PATH
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+//  API
 // ══════════════════════════════════════════════════════════
 async function apiGet(params) {
   const url = SCRIPT_URL + "?" + new URLSearchParams(params).toString();
   const res = await fetch(url);
   return res.json();
 }
-
 async function apiPost(body) {
-  const res = await fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(body)
-  });
-
+  const res = await fetch(SCRIPT_URL, { method:"POST", body:JSON.stringify(body) });
   return res.json();
 }
 
@@ -373,16 +500,13 @@ async function apiPost(body) {
 //  INIT
 // ══════════════════════════════════════════════════════════
 async function init() {
-  try { await loadCandidates(); } catch(e) { /* silencieux au démarrage */ }
+  try { await loadCandidates(); } catch(e) {}
   document.getElementById("header-admin-btn").style.display = "inline";
   showScreen("screen-identity");
 }
 
-// ══════════════════════════════════════════════════════════
-//  CANDIDATS — LECTURE
-// ══════════════════════════════════════════════════════════
 async function loadCandidates() {
-  const data = await apiGet({ action: "getCandidates" });
+  const data = await apiGet({ action:"getCandidates" });
   if (data.ok) { candidates = data.candidates; return true; }
   throw new Error(data.error || "Erreur serveur");
 }
@@ -391,8 +515,7 @@ async function refreshCandidates() {
   setSyncState("loading", "Actualisation…");
   try {
     await loadCandidates();
-    renderStats();
-    renderCandidateList();
+    renderStats(); renderCandidateList();
     setSyncState("ok", "Synchronisé · " + new Date().toLocaleTimeString("fr-FR"));
     showToast("Liste actualisée.", "success");
   } catch(e) {
@@ -400,7 +523,6 @@ async function refreshCandidates() {
     showToast("Impossible de contacter Google Sheets.", "error");
   }
 }
-
 function setSyncState(state, label) {
   const dot = document.getElementById("sync-dot");
   const lbl = document.getElementById("sync-label");
@@ -415,8 +537,9 @@ function setSyncState(state, label) {
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  // Hide PDF when leaving exam
+  if (id !== "screen-exam") { closePdf(); document.getElementById("pdf-toggle-btn").classList.add("hidden"); }
 }
-
 function showAdminLogin() {
   document.getElementById("inp-admin-pwd").value = "";
   document.getElementById("admin-login-error").style.display = "none";
@@ -437,11 +560,7 @@ function loginAdmin() {
     document.getElementById("admin-login-error").style.display = "block";
   }
 }
-
-function logoutAdmin() {
-  adminLoggedIn = false;
-  showScreen("screen-identity");
-}
+function logoutAdmin() { adminLoggedIn = false; showScreen("screen-identity"); }
 
 // ══════════════════════════════════════════════════════════
 //  ADMIN DASHBOARD
@@ -450,27 +569,26 @@ async function loadAdminDashboard() {
   setSyncState("loading", "Chargement depuis Google Sheets…");
   try {
     await loadCandidates();
-    renderStats();
-    renderCandidateList();
+    renderStats(); renderCandidateList();
     setSyncState("ok", "Connecté · données centralisées Google Sheets");
   } catch(e) {
     setSyncState("error", "Impossible de charger — vérifiez l'URL du script");
     document.getElementById("candidate-list").innerHTML =
-      `<div class="access-denied">❌ Impossible de charger la liste.<br/>Vérifiez que l'URL du Apps Script est correcte et que le déploiement est actif.</div>`;
+      `<div class="access-denied">❌ Impossible de charger la liste.</div>`;
   }
 }
-
 function renderStats() {
-  const total   = candidates.length;
-  const active  = candidates.filter(c => c.status === "active").length;
-  const done    = candidates.filter(c => c.status === "done").length;
+  const total  = candidates.length;
+  const dAct   = candidates.filter(c => c.modules?.digital === "active").length;
+  const doAct  = candidates.filter(c => c.modules?.docs === "active").length;
+  const done   = candidates.filter(c => c.modules?.digital === "done" || c.modules?.docs === "done").length;
   document.getElementById("admin-stats").innerHTML = `
     <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Candidats</div></div>
-    <div class="stat-card"><div class="stat-number">${active}</div><div class="stat-label">Actifs</div></div>
+    <div class="stat-card"><div class="stat-number">${dAct}</div><div class="stat-label">Digital actifs</div></div>
+    <div class="stat-card"><div class="stat-number">${doAct}</div><div class="stat-label">Docs actifs</div></div>
     <div class="stat-card"><div class="stat-number">${done}</div><div class="stat-label">Ont passé</div></div>
   `;
 }
-
 function switchTab(id) {
   document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
@@ -479,68 +597,55 @@ function switchTab(id) {
   document.querySelectorAll(".admin-tab")[idx].classList.add("active");
 }
 
-// ── AJOUTER ──
+// ── ADD CANDIDATE ──
 async function addCandidate() {
   const prenom = document.getElementById("add-prenom").value.trim();
   const nom    = document.getElementById("add-nom").value.trim();
   if (!prenom || !nom) { showToast("Prénom et nom requis.", "error"); return; }
-
   const btn = document.getElementById("btn-add");
   btn.disabled = true; btn.textContent = "Ajout…";
-
   try {
     const res = await apiPost({ action:"addCandidate", prenom, nom });
     if (res.ok) {
-      candidates.push({ id:res.id, nom, prenom, status:"active", addedAt: new Date().toLocaleString("fr-FR") });
+      candidates.push({ id:res.id, nom, prenom, addedAt: new Date().toLocaleString("fr-FR"), modules:{ digital:"none", docs:"none" } });
       document.getElementById("add-prenom").value = "";
       document.getElementById("add-nom").value = "";
       renderStats(); renderCandidateList();
       showToast(`${prenom} ${nom} ajouté(e).`, "success");
-    } else {
-      showToast(res.error || "Erreur.", "error");
-    }
-  } 
-  catch(e) { console.error(e);
-      showToast("Erreur de connexion.", "error"); 
-        }
-
+    } else { showToast(res.error || "Erreur.", "error"); }
+  } catch(e) { showToast("Erreur de connexion.", "error"); }
   btn.disabled = false; btn.textContent = "+ Ajouter";
 }
 
-// ── CHANGER STATUT ──
-async function toggleCandidateStatus(id) {
-  const c = candidates.find(c => c.id === id);
+// ── TOGGLE MODULE STATUS ──
+async function cycleModuleStatus(candidateId, module) {
+  const c = candidates.find(c => c.id === candidateId);
   if (!c) return;
-  const newStatus = c.status === "active" ? "blocked"
-                  : c.status === "blocked" ? "active"
-                  : "active"; // done → active (réinitialiser)
-
-  const prev = c.status;
-  c.status = newStatus;
+  const current = c.modules[module] || "none";
+  // Cycle: none → active → blocked → none  (done stays until manual reset)
+  const cycle = { none:"active", active:"blocked", blocked:"none", done:"active" };
+  const newStatus = cycle[current] || "active";
+  const prev = c.modules[module];
+  c.modules[module] = newStatus;
   renderCandidateList(); renderStats();
-
   try {
-    const res = await apiPost({ action:"updateStatus", id, status:newStatus });
+    const res = await apiPost({ action:"updateModuleStatus", id:candidateId, module, status:newStatus });
     if (!res.ok) {
-      c.status = prev; renderCandidateList(); renderStats();
+      c.modules[module] = prev; renderCandidateList(); renderStats();
       showToast("Erreur lors de la mise à jour.", "error");
-    } else if (prev === "done" && newStatus === "active") {
-      showToast(`${c.prenom} ${c.nom} peut repasser l'examen.`, "success");
     }
   } catch(e) {
-    c.status = prev; renderCandidateList(); renderStats();
+    c.modules[module] = prev; renderCandidateList(); renderStats();
     showToast("Erreur de connexion.", "error");
   }
 }
 
-// ── SUPPRIMER ──
+// ── DELETE ──
 async function deleteCandidate(id) {
   const c = candidates.find(c => c.id === id);
   if (!c || !confirm(`Supprimer ${c.prenom} ${c.nom} ?`)) return;
-
   candidates = candidates.filter(c => c.id !== id);
   renderCandidateList(); renderStats();
-
   try {
     await apiPost({ action:"deleteCandidate", id });
     showToast("Candidat supprimé.");
@@ -550,17 +655,22 @@ async function deleteCandidate(id) {
   }
 }
 
-// ── LISTE ──
-function normalise(s) {
-  return String(s).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+// ── RENDER LIST ──
+function normalise(s) { return String(s).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+
+function moduleToggleHTML(candidateId, module, status) {
+  const labels = { none:"Non assigné", active:"Actif", blocked:"Bloqué", done:"A passé" };
+  const icons  = { none:"○", active:"●", blocked:"✕", done:"✓" };
+  const moduleLabel = module === "digital" ? "💻 Digital" : "📄 Analyse Doc";
+  return `<button class="module-toggle ${status}-state" onclick="cycleModuleStatus('${candidateId}','${module}')" title="Cliquer pour changer">
+    <span class="module-dot"></span>${moduleLabel} · ${labels[status]||"?"}
+  </button>`;
 }
 
 function renderCandidateList() {
   const search   = normalise(document.getElementById("search-candidates")?.value || "");
   const filtered = candidates.filter(c =>
-    !search ||
-    normalise(c.prenom + " " + c.nom).includes(search) ||
-    normalise(c.nom + " " + c.prenom).includes(search)
+    !search || normalise(c.prenom+" "+c.nom).includes(search) || normalise(c.nom+" "+c.prenom).includes(search)
   );
   const el = document.getElementById("candidate-list");
   if (!el) return;
@@ -568,55 +678,45 @@ function renderCandidateList() {
     el.innerHTML = `<div class="empty-state">${search ? "Aucun résultat." : "Aucun candidat. Ajoutez-en ci-dessus."}</div>`;
     return;
   }
-  el.innerHTML = filtered.map(c => {
-    const { badge, dotClass, label, btnLabel, btnClass } = statusMeta(c.status);
-    return `<div class="candidate-row">
+  el.innerHTML = filtered.map(c => `
+    <div class="candidate-row">
       <div class="candidate-info">
         <div class="candidate-name-text">${c.prenom} ${c.nom}</div>
         <div class="candidate-meta">Ajouté le ${c.addedAt}</div>
       </div>
-      <span class="${badge}"><span class="dot-status ${dotClass}"></span>${label}</span>
-      <button class="btn btn-sm ${btnClass}" onclick="toggleCandidateStatus('${c.id}')">${btnLabel}</button>
+      <div class="module-controls">
+        ${moduleToggleHTML(c.id, "digital", c.modules?.digital || "none")}
+        ${moduleToggleHTML(c.id, "docs", c.modules?.docs || "none")}
+      </div>
       <button class="btn btn-sm btn-secondary" onclick="deleteCandidate('${c.id}')" title="Supprimer">✕</button>
-    </div>`;
-  }).join("");
+    </div>
+  `).join("");
 }
 
-function statusMeta(s) {
-  if (s === "active")  return {badge:"status-badge badge-active",  dotClass:"dot-active",  label:"Actif",   btnLabel:"Bloquer",       btnClass:"btn-secondary"};
-  if (s === "blocked") return {badge:"status-badge badge-blocked", dotClass:"dot-blocked", label:"Bloqué",  btnLabel:"Activer",       btnClass:"btn-success"};
-  return                      {badge:"status-badge badge-done",    dotClass:"dot-done",    label:"A passé", btnLabel:"Réinitialiser", btnClass:"btn-primary"};
-}
-
-// ── PARAMÈTRES ──
+// ── SETTINGS ──
 function saveSettings() {
   const oldPwd = document.getElementById("setting-old-pwd").value;
   const newPwd = document.getElementById("setting-new-pwd").value;
   if (!newPwd) { showToast("Saisissez un nouveau mot de passe.", "error"); return; }
   if (oldPwd !== adminPwd) { showToast("Mot de passe actuel incorrect.", "error"); return; }
-  adminPwd = newPwd;
-  localStorage.setItem(ADMIN_PWD_KEY, newPwd);
+  adminPwd = newPwd; localStorage.setItem(ADMIN_PWD_KEY, newPwd);
   document.getElementById("setting-old-pwd").value = "";
   document.getElementById("setting-new-pwd").value = "";
   showToast("Mot de passe mis à jour.", "success");
 }
-
 async function resetAllCandidates() {
-  if (!confirm("⚠ Supprimer TOUS les candidats de Google Sheets ? Cette action est irréversible.")) return;
+  if (!confirm("⚠ Supprimer TOUS les candidats ? Action irréversible.")) return;
   showOverlay("Suppression en cours…");
   try {
-    for (const c of [...candidates]) {
-      await apiPost({ action:"deleteCandidate", id:c.id });
-    }
-    candidates = [];
-    renderStats(); renderCandidateList();
+    for (const c of [...candidates]) await apiPost({ action:"deleteCandidate", id:c.id });
+    candidates = []; renderStats(); renderCandidateList();
     showToast("Tous les candidats supprimés.");
   } catch(e) { showToast("Erreur lors de la suppression.", "error"); }
   hideOverlay();
 }
 
 // ══════════════════════════════════════════════════════════
-//  CHECK CANDIDAT (côté candidat)
+//  CANDIDATE CHECK & MODULE SELECTION
 // ══════════════════════════════════════════════════════════
 async function checkCandidate() {
   const prenom = document.getElementById("inp-prenom").value.trim();
@@ -625,56 +725,151 @@ async function checkCandidate() {
   errEl.style.display = "none";
   if (!prenom || !nom) { showToast("Veuillez saisir votre prénom et votre nom."); return; }
 
-  const btn = document.getElementById("btn-start");
+  const btn = document.getElementById("btn-check");
   btn.disabled = true;
   btn.innerHTML = '<div class="spinner spinner-sm"></div> Vérification…';
 
-  try {
-    await loadCandidates(); // toujours vérifier en temps réel
-  } catch(e) {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5V3z" fill="currentColor"/></svg> Commencer l\'examen';
-    errEl.textContent = "❌ Impossible de vérifier votre inscription. Vérifiez votre connexion et réessayez.";
+  try { await loadCandidates(); }
+  catch(e) {
+    btn.disabled = false; btn.innerHTML = 'Vérifier mon accès';
+    errEl.textContent = "❌ Impossible de vérifier. Vérifiez votre connexion.";
     errEl.style.display = "block"; return;
   }
 
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l6 5-6 5V3z" fill="currentColor"/></svg> Commencer l\'examen';
+  btn.disabled = false; btn.innerHTML = 'Vérifier mon accès';
 
   const cand = candidates.find(c =>
     normalise(c.prenom) === normalise(prenom) && normalise(c.nom) === normalise(nom)
   );
 
   if (!cand) {
-    errEl.textContent = "❌ Vous n'êtes pas inscrit(e) sur la liste des candidats. Contactez un administrateur.";
-    errEl.style.display = "block"; return;
-  }
-  if (cand.status === "blocked") {
-    errEl.textContent = "🚫 Votre accès a été bloqué. Contactez un administrateur.";
-    errEl.style.display = "block"; return;
-  }
-  if (cand.status === "done") {
-    errEl.textContent = "✅ Vous avez déjà passé cet examen. Contactez un administrateur pour repasser.";
+    errEl.textContent = "❌ Vous n'êtes pas inscrit(e). Contactez un administrateur.";
     errEl.style.display = "block"; return;
   }
 
-  examState.prenom = cand.prenom; examState.nom = cand.nom;
-  examState.candidateId = cand.id; examState.currentQ = 0;
-  examState.answers = new Array(QUESTIONS.length).fill(null);
-  examState.secondsLeft = EXAM_DURATION; examState.submitted = false;
+  // Collect available modules
+  const available = [];
+  if (cand.modules?.digital === "active") available.push("digital");
+  if (cand.modules?.docs === "active")    available.push("docs");
+  // Done / blocked info
+  const info = [];
+  if (cand.modules?.digital === "done")    info.push("Compétences Digitales : déjà passé");
+  if (cand.modules?.digital === "blocked") info.push("Compétences Digitales : accès bloqué");
+  if (cand.modules?.docs === "done")       info.push("Analyse Documentaire : déjà passé");
+  if (cand.modules?.docs === "blocked")    info.push("Analyse Documentaire : accès bloqué");
+
+  if (available.length === 0) {
+    let msg = "🚫 Aucun module disponible pour votre compte.";
+    if (info.length > 0) msg += " (" + info.join(", ") + ")";
+    msg += " Contactez un administrateur.";
+    errEl.textContent = msg; errEl.style.display = "block"; return;
+  }
+
+  currentCandidateData = cand;
+  selectedModule = null;
+  renderModulePicker(cand, available);
+  document.getElementById("check-btn-wrapper").style.display = "none";
+  document.getElementById("module-select-section").style.display = "block";
+}
+
+function renderModulePicker(cand, available) {
+  const picker = document.getElementById("module-picker");
+  const allModules = ["digital", "docs"];
+  picker.innerHTML = allModules.map(m => {
+    const cfg    = MODULE_CONFIG[m];
+    const status = cand.modules?.[m] || "none";
+    const isAvail = available.includes(m);
+    let stateClass = "";
+    let badgeClass = "badge-none";
+    let badgeLabel = "Non assigné";
+    let disabled   = true;
+    if (status === "active")  { stateClass=""; badgeClass="badge-active";  badgeLabel="Disponible"; disabled=false; }
+    if (status === "blocked") { stateClass="blocked-state"; badgeClass="badge-blocked"; badgeLabel="Bloqué"; }
+    if (status === "done")    { stateClass="done-state";    badgeClass="badge-done";    badgeLabel="Déjà passé"; }
+    if (status === "none")    { stateClass="disabled"; badgeClass="badge-none"; badgeLabel="Non assigné"; }
+    return `<div class="module-card ${disabled?"disabled":""} ${stateClass}" 
+                 id="mc-${m}" 
+                 onclick="${disabled?"":"selectModule('"+m+"')"}">
+      <div class="module-icon ${m}">${cfg.icon}</div>
+      <div class="module-card-title">${cfg.label}</div>
+      <div class="module-card-sub">20 questions · 20 min${cfg.hasPdf ? " · Dossier PDF fourni" : ""}</div>
+      <span class="module-badge ${badgeClass}">${badgeLabel}</span>
+    </div>`;
+  }).join("");
+}
+
+function selectModule(m) {
+  selectedModule = m;
+  document.querySelectorAll(".module-card:not(.disabled)").forEach(el => el.classList.remove("selected"));
+  document.getElementById("mc-"+m)?.classList.add("selected");
+  document.getElementById("module-error").style.display = "none";
+}
+
+function startSelectedModule() {
+  if (!selectedModule) {
+    document.getElementById("module-error").style.display = "block"; return;
+  }
+  launchExam(currentCandidateData, selectedModule);
+}
+
+// ══════════════════════════════════════════════════════════
+//  LAUNCH EXAM
+// ══════════════════════════════════════════════════════════
+function launchExam(cand, module) {
+  const cfg = MODULE_CONFIG[module];
+  examState.module      = module;
+  examState.prenom      = cand.prenom;
+  examState.nom         = cand.nom;
+  examState.candidateId = cand.id;
+  examState.currentQ    = 0;
+  examState.answers     = new Array(cfg.questions.length).fill(null);
+  examState.secondsLeft = EXAM_DURATION;
+  examState.submitted   = false;
+
   document.getElementById("display-name").textContent = `${cand.prenom} ${cand.nom}`;
+  document.getElementById("module-pill").innerHTML =
+    `<span class="module-pill pill-${module}">${cfg.icon} ${cfg.label}</span>`;
+
+  const fill = document.getElementById("progress-fill");
+  fill.className = "progress-fill" + (module === "docs" ? " docs" : "");
+
+  // PDF button
+  const pdfBtn = document.getElementById("pdf-toggle-btn");
+  if (cfg.hasPdf) {
+    pdfBtn.classList.remove("hidden");
+    document.getElementById("pdf-frame").src = cfg.pdfPath;
+  } else {
+    pdfBtn.classList.add("hidden");
+  }
+
   buildDots(); renderQuestion(); startTimer();
   showScreen("screen-exam");
+}
+
+// ══════════════════════════════════════════════════════════
+//  PDF PANEL
+// ══════════════════════════════════════════════════════════
+function togglePdf() { pdfOpen ? closePdf() : openPdf(); }
+function openPdf() {
+  pdfOpen = true;
+  document.getElementById("pdf-panel").classList.add("open");
+  document.getElementById("pdf-toggle-btn").textContent = "✕ Fermer le dossier";
+}
+function closePdf() {
+  pdfOpen = false;
+  document.getElementById("pdf-panel").classList.remove("open");
+  document.getElementById("pdf-toggle-btn").textContent = "📄 Dossier documentaire";
 }
 
 // ══════════════════════════════════════════════════════════
 //  TIMER
 // ══════════════════════════════════════════════════════════
 function startTimer() {
+  clearInterval(examState.timerInterval);
   const el = document.getElementById("timer-display");
   examState.timerInterval = setInterval(() => {
     examState.secondsLeft--;
-    const m = Math.floor(examState.secondsLeft / 60), s = examState.secondsLeft % 60;
+    const m = Math.floor(examState.secondsLeft/60), s = examState.secondsLeft%60;
     el.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
     el.className = "timer";
     if (examState.secondsLeft <= 120) el.classList.add("warning");
@@ -684,11 +879,12 @@ function startTimer() {
 }
 
 // ══════════════════════════════════════════════════════════
-//  DOTS & QUESTIONS
+//  DOTS & NAVIGATION
 // ══════════════════════════════════════════════════════════
 function buildDots() {
   const c = document.getElementById("dots-container"); c.innerHTML = "";
-  QUESTIONS.forEach((_, i) => {
+  const qs = MODULE_CONFIG[examState.module].questions;
+  qs.forEach((_, i) => {
     const d = document.createElement("button");
     d.className = "dot"; d.id = `dot-${i}`; d.textContent = i+1; d.title = `Question ${i+1}`;
     d.onclick = () => { examState.currentQ = i; renderQuestion(); };
@@ -696,50 +892,160 @@ function buildDots() {
   });
 }
 function updateDots() {
-  QUESTIONS.forEach((_, i) => {
+  const qs = MODULE_CONFIG[examState.module].questions;
+  const isDocs = examState.module === "docs";
+  qs.forEach((_, i) => {
     const d = document.getElementById(`dot-${i}`); if (!d) return;
     d.className = "dot";
-    if (examState.answers[i] !== null) d.classList.add("answered");
-    if (i === examState.currentQ)      d.classList.add("current");
+    const ans = examState.answers[i];
+    const answered = isAnswered(ans, qs[i]);
+    if (answered) { d.classList.add("answered"); if (isDocs) d.classList.add("docs-module"); }
+    if (i === examState.currentQ) d.classList.add("current");
   });
 }
+function isAnswered(ans, q) {
+  if (ans === null || ans === undefined) return false;
+  if (q.type === "multi")    return Array.isArray(ans) && ans.length > 0;
+  if (q.type === "fill")     return ans && Object.keys(ans).length > 0 && Object.values(ans).some(v=>v!==null);
+  return ans !== null;
+}
+
+function navigate(dir) {
+  const n = examState.currentQ + dir;
+  const qs = MODULE_CONFIG[examState.module].questions;
+  if (n >= 0 && n < qs.length) { examState.currentQ = n; renderQuestion(); }
+}
+
+// ══════════════════════════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════════════════════════
 function renderQuestion() {
-  const i = examState.currentQ, q = QUESTIONS[i];
+  const i  = examState.currentQ;
+  const qs = MODULE_CONFIG[examState.module].questions;
+  const q  = qs[i];
+  const isDocs = examState.module === "docs";
+
+  // Section label
+  const sectionEl = document.getElementById("question-section-label-el");
+  if (q.section) {
+    const cls = q.section === "reperage" ? "label-reperage" : q.section === "analyse" ? "label-analyse" : "label-synthese";
+    sectionEl.innerHTML = `<div class="question-section-label ${cls}">${
+      q.section === "reperage" ? "Repérage" : q.section === "analyse" ? "Analyse" : "Synthèse"
+    }</div>`;
+  } else { sectionEl.innerHTML = ""; }
+
   document.getElementById("q-number").textContent = `Question ${String(i+1).padStart(2,"0")}`;
   document.getElementById("q-text").textContent   = q.q;
-  document.getElementById("progress-text").textContent = `Question ${i+1} / ${QUESTIONS.length}`;
-  const answered = examState.answers.filter(a => a !== null).length;
+  document.getElementById("progress-text").textContent = `Question ${i+1} / ${qs.length}`;
+
+  const answered = examState.answers.filter((a,idx) => isAnswered(a, qs[idx])).length;
   document.getElementById("answered-count").textContent = `${answered} répondues`;
-  document.getElementById("progress-fill").style.width = `${((i+1)/QUESTIONS.length)*100}%`;
-  const cc = document.getElementById("q-choices"); cc.innerHTML = "";
-  q.choices.forEach(ch => {
-    const div = document.createElement("div");
-    div.className = "choice" + (examState.answers[i]===ch.l.toLowerCase()?" selected":"");
-    div.innerHTML = `<div class="choice-letter">${ch.l}</div><div class="choice-text">${ch.t}</div>`;
-    div.onclick = () => selectAnswer(ch.l.toLowerCase());
-    cc.appendChild(div);
-  });
-  document.getElementById("btn-prev").disabled   = i===0;
-  document.getElementById("btn-next").disabled   = i===QUESTIONS.length-1;
-  const allAnswered = examState.answers.every(a => a !== null);
+  document.getElementById("progress-fill").style.width = `${((i+1)/qs.length)*100}%`;
+
+  // Hint
+  const hintEl = document.getElementById("question-hint-el");
+  if (q.hint) {
+    hintEl.innerHTML = `<div class="question-hint">💡 ${q.hint}</div>`;
+  } else { hintEl.innerHTML = ""; }
+
+  // Choices
+  const wrapper = document.getElementById("q-choices-wrapper");
+  if (q.type === "multi") {
+    renderMultiChoices(wrapper, q, i);
+  } else if (q.type === "fill") {
+    renderFillChoices(wrapper, q, i);
+  } else {
+    renderSingleChoices(wrapper, q, i);
+  }
+
+  document.getElementById("btn-prev").disabled = i === 0;
+  document.getElementById("btn-next").disabled = i === qs.length - 1;
+  const allAnswered = examState.answers.every((a, idx) => isAnswered(a, qs[idx]));
   document.getElementById("btn-submit").disabled = !allAnswered;
   document.getElementById("submit-note").textContent = allAnswered
     ? "Toutes les questions sont répondues !"
-    : `${QUESTIONS.length-answered} question(s) sans réponse`;
+    : `${qs.length - answered} question(s) sans réponse`;
   updateDots();
 }
-function selectAnswer(l) { examState.answers[examState.currentQ]=l; renderQuestion(); }
-function navigate(dir) {
-  const n = examState.currentQ+dir;
-  if (n>=0 && n<QUESTIONS.length) { examState.currentQ=n; renderQuestion(); }
+
+function renderSingleChoices(wrapper, q, i) {
+  wrapper.innerHTML = `<div class="choices" id="q-choices"></div>`;
+  const cc = wrapper.querySelector("#q-choices");
+  q.choices.forEach(ch => {
+    const div = document.createElement("div");
+    div.className = "choice" + (examState.answers[i] === ch.l.toLowerCase() ? " selected" : "");
+    div.innerHTML = `<div class="choice-letter">${ch.l}</div><div class="choice-text">${ch.t}</div>`;
+    div.onclick = () => { examState.answers[i] = ch.l.toLowerCase(); renderQuestion(); };
+    cc.appendChild(div);
+  });
+}
+
+function renderMultiChoices(wrapper, q, i) {
+  const current = examState.answers[i] || [];
+  wrapper.innerHTML = `<div class="choices-multi" id="q-choices"></div>`;
+  const cc = wrapper.querySelector("#q-choices");
+  q.choices.forEach(ch => {
+    const val = ch.l.toLowerCase();
+    const isSelected = current.includes(val);
+    const div = document.createElement("div");
+    div.className = "choice-multi" + (isSelected ? " selected" : "");
+    div.innerHTML = `
+      <div class="choice-checkbox">${isSelected ? '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M1 6l4 4 6-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : ''}</div>
+      <div class="choice-text">${ch.t}</div>`;
+    div.onclick = () => {
+      let arr = [...(examState.answers[i] || [])];
+      if (arr.includes(val)) arr = arr.filter(v => v !== val);
+      else arr.push(val);
+      examState.answers[i] = arr;
+      renderQuestion();
+    };
+    cc.appendChild(div);
+  });
+}
+
+function renderFillChoices(wrapper, q, i) {
+  const current = examState.answers[i] || {};
+  let html = `<div class="fill-group">`;
+  q.vars.forEach(v => {
+    html += `<div class="fill-item">
+      <div class="fill-var">[${v.key}] — ${v.label}</div>
+      <div class="fill-choices">`;
+    v.choices.forEach(ch => {
+      const isSelected = current[v.key] === ch.val;
+      html += `<div class="fill-choice${isSelected?" selected":""}" onclick="selectFill(${i},'${v.key}','${ch.val.replace(/'/g,"\\'")}')">
+        <div class="fill-radio"></div>
+        <span>${ch.val}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+  wrapper.innerHTML = html;
+}
+
+function selectFill(qi, varKey, val) {
+  if (!examState.answers[qi] || typeof examState.answers[qi] !== "object") {
+    examState.answers[qi] = {};
+  }
+  examState.answers[qi][varKey] = val;
+  // Check if all vars answered for this question
+  const q = MODULE_CONFIG[examState.module].questions[qi];
+  const allVarsAnswered = q.vars.every(v => examState.answers[qi][v.key]);
+  if (!allVarsAnswered) {
+    // partial answer — just re-render to show selection
+    renderQuestion();
+  } else {
+    renderQuestion();
+  }
 }
 
 // ══════════════════════════════════════════════════════════
 //  SUBMIT
 // ══════════════════════════════════════════════════════════
 function confirmSubmit() {
-  const u = examState.answers.filter(a => a===null).length;
-  if (u>0) { showToast(`Il reste ${u} question(s) sans réponse.`); return; }
+  const qs = MODULE_CONFIG[examState.module].questions;
+  const u = examState.answers.filter((a,i) => !isAnswered(a, qs[i])).length;
+  if (u > 0) { showToast(`Il reste ${u} question(s) sans réponse.`); return; }
   if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?")) submitExam(false);
 }
 
@@ -747,58 +1053,120 @@ async function submitExam(timeUp) {
   if (examState.submitted) return;
   examState.submitted = true;
   clearInterval(examState.timerInterval);
+  closePdf();
+
   const usedSec = EXAM_DURATION - examState.secondsLeft;
   const temps = `${String(Math.floor(usedSec/60)).padStart(2,"0")}:${String(usedSec%60).padStart(2,"0")}`;
+  const qs = MODULE_CONFIG[examState.module].questions;
   let score = 0;
-  examState.answers.forEach((ans,i) => { if(ans===QUESTIONS[i].answer) score++; });
+  examState.answers.forEach((ans, i) => {
+    score += scoreQuestion(ans, qs[i]);
+  });
 
   showOverlay("Enregistrement des résultats…");
 
   const payload = {
-    action:"submitResult",
-    nom:examState.nom, prenom:examState.prenom,
+    action: "submitResult",
+    module: examState.module,
+    nom: examState.nom, prenom: examState.prenom,
     dateHeure: new Date().toLocaleString("fr-FR"),
-    score, tempsUtilise:temps,
-    soumissionAutomatique: timeUp?"OUI":"NON",
+    score, tempsUtilise: temps,
+    soumissionAutomatique: timeUp ? "OUI" : "NON",
     candidateId: examState.candidateId
   };
-  QUESTIONS.forEach((_,i) => { payload[`Q${i+1}`] = examState.answers[i]||"—"; });
+  qs.forEach((q, i) => {
+    const ans = examState.answers[i];
+    if (q.type === "multi")   payload[`Q${i+1}`] = Array.isArray(ans) ? ans.join(",") : "—";
+    else if (q.type === "fill") payload[`Q${i+1}`] = ans ? Object.values(ans).join("/") : "—";
+    else payload[`Q${i+1}`] = ans || "—";
+  });
 
   try {
     await apiPost(payload);
-    const cand = candidates.find(c => c.id===examState.candidateId);
-    if (cand) cand.status = "done";
+    const cand = candidates.find(c => c.id === examState.candidateId);
+    if (cand) cand.modules[examState.module] = "done";
   } catch(e) { console.warn("Erreur envoi:", e); }
 
   hideOverlay();
   showResults(score, temps, timeUp);
 }
 
+// Score: 1 pt per correct question (all-or-nothing for multi & fill)
+function scoreQuestion(ans, q) {
+  if (q.type === "single") {
+    return (ans && ans === q.answer) ? 1 : 0;
+  }
+  if (q.type === "multi") {
+    if (!Array.isArray(ans) || ans.length === 0) return 0;
+    const correct = q.answers.slice().sort().join(",");
+    const given   = ans.slice().sort().join(",");
+    return correct === given ? 1 : 0;
+  }
+  if (q.type === "fill") {
+    if (!ans || typeof ans !== "object") return 0;
+    return q.vars.every(v => ans[v.key] === v.answer) ? 1 : 0;
+  }
+  return 0;
+}
+
 // ══════════════════════════════════════════════════════════
 //  RESULTS
 // ══════════════════════════════════════════════════════════
 function showResults(score, temps, timeUp) {
+  const isDocs = examState.module === "docs";
+  const circle = document.getElementById("score-circle");
+  circle.className = "score-circle" + (isDocs ? " docs" : "");
   document.getElementById("res-score").textContent = score;
   let msg, sub;
-  if (score>=18)      { msg="Excellent ! Bravo !";  sub="Performance remarquable." }
-  else if (score>=14) { msg="Très bon résultat !";  sub="Quelques points à consolider." }
-  else if (score>=10) { msg="Résultat moyen.";      sub="Continuez à vous entraîner." }
-  else                { msg="Encore un effort !";   sub="Revoyez les notions fondamentales." }
+  if (score >= 18)     { msg = "Excellent ! Bravo !";   sub = "Performance remarquable." }
+  else if (score >= 14){ msg = "Très bon résultat !";   sub = "Quelques points à consolider." }
+  else if (score >= 10){ msg = "Résultat correct.";     sub = "Continuez à vous entraîner." }
+  else                 { msg = "Encore un effort !";    sub = "Revoyez les notions fondamentales." }
   if (timeUp) sub += " (temps écoulé — soumission automatique)";
   document.getElementById("res-msg").textContent = msg;
-  document.getElementById("res-sub").textContent = `Score : ${score}/20 · Temps utilisé : ${temps}`;
-  const list = document.getElementById("results-list"); list.innerHTML = "";
-  QUESTIONS.forEach((q,i) => {
-    const userAns=examState.answers[i]||"—", correct=q.answer, isOk=userAns===correct;
-    const ct = l => { const c=q.choices.find(ch=>ch.l.toLowerCase()===l); return c?`${c.l}. ${c.t}`:l; };
+  document.getElementById("res-sub").textContent = `Score : ${score}/20 · Temps : ${temps}`;
+
+  const qs   = MODULE_CONFIG[examState.module].questions;
+  const list = document.getElementById("results-list");
+  list.innerHTML = "";
+
+  qs.forEach((q, i) => {
+    const ans = examState.answers[i];
+    const pts = scoreQuestion(ans, q);
+    let statusClass = pts === 1 ? "correct" : "wrong";
+    let icon = pts === 1 ? "✓" : "✗";
+    let detail = "";
+
+    if (q.type === "single") {
+      const ct = l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? `${c.l}. ${c.t}` : l||"—"; };
+      detail = pts === 1
+        ? `<em>${ct(ans)}</em>`
+        : `Votre réponse : <s>${ct(ans)}</s> · Bonne réponse : <em>${ct(q.answer)}</em>`;
+    } else if (q.type === "multi") {
+      const ct = l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? c.l : l; };
+      const given   = Array.isArray(ans) ? ans.map(ct).join(", ") : "—";
+      const correct = q.answers.map(ct).join(", ");
+      detail = pts === 1
+        ? `<em>Réponses correctes : ${correct}</em>`
+        : `Vos réponses : <s>${given}</s> · Attendu : <em>${correct}</em>`;
+    } else if (q.type === "fill") {
+      const parts = q.vars.map(v => {
+        const given = ans?.[v.key] || "—";
+        const ok    = given === v.answer;
+        return ok ? `<em>[${v.key}]=${given}</em>` : `<s>[${v.key}]=${given}</s> (attendu: <em>${v.answer}</em>)`;
+      });
+      detail = parts.join(" · ");
+    }
+
     const div = document.createElement("div");
-    div.className = `result-item ${isOk?"correct":"wrong"}`;
-    div.innerHTML = `<div class="result-icon">${isOk?"✓":"✗"}</div><div>
-      <div class="result-q">Q${i+1}. ${q.q.substring(0,70)}${q.q.length>70?"…":""}</div>
-      <div class="result-detail">${isOk?`<em>${ct(correct)}</em>`:`Votre réponse : <s>${ct(userAns)}</s> · Bonne réponse : <em>${ct(correct)}</em>`}</div>
+    div.className = `result-item ${statusClass}`;
+    div.innerHTML = `<div class="result-icon">${icon}</div><div>
+      <div class="result-q">Q${i+1}. ${q.q.substring(0,80)}${q.q.length>80?"…":""}</div>
+      <div class="result-detail">${detail}</div>
     </div>`;
     list.appendChild(div);
   });
+
   showScreen("screen-results");
 }
 
@@ -807,46 +1175,225 @@ function showResults(score, temps, timeUp) {
 // ══════════════════════════════════════════════════════════
 function showOverlay(msg) { document.getElementById("overlay-msg").textContent=msg; document.getElementById("sending-overlay").classList.add("show"); }
 function hideOverlay()    { document.getElementById("sending-overlay").classList.remove("show"); }
-
 let toastTimer;
 function showToast(msg, type="") {
   const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = "toast" + (type?" "+type:"");
-  t.classList.add("show");
-  clearTimeout(toastTimer);
+  t.textContent = msg; t.className = "toast" + (type?" "+type:"");
+  t.classList.add("show"); clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
 }
 
 document.addEventListener("keydown", e => {
-  if (e.key==="Enter" && document.getElementById("screen-identity").classList.contains("active"))     checkCandidate();
-  if (e.key==="Enter" && document.getElementById("screen-admin-login").classList.contains("active"))  loginAdmin();
+  if (e.key==="Enter" && document.getElementById("screen-identity").classList.contains("active")) checkCandidate();
+  if (e.key==="Enter" && document.getElementById("screen-admin-login").classList.contains("active")) loginAdmin();
 });
 
 // ══════════════════════════════════════════════════════════
-//  QUESTIONS
+//  QUESTIONS — MODULE COMPÉTENCES DIGITALES
 // ══════════════════════════════════════════════════════════
-const QUESTIONS = [
-  {q:"Dans un tableur, la cellule A1 contient 200 et la cellule A2 contient 50. Quelle formule affiche le pourcentage que représente A2 par rapport à A1 ?",choices:[{l:"A",t:"=A1/A2*100"},{l:"B",t:"=A2-A1"},{l:"C",t:"=A2/A1*100"},{l:"D",t:"=A1*A2/100"}],answer:"c"},
-  {q:"Quelle est la différence entre « Enregistrer » et « Enregistrer sous » dans un traitement de texte ?",choices:[{l:"A",t:"« Enregistrer » crée une copie du fichier, « Enregistrer sous » met à jour l'original."},{l:"B",t:"« Enregistrer » met à jour le fichier existant, « Enregistrer sous » crée un nouveau fichier ou change l'emplacement."},{l:"C",t:"Les deux fonctions font exactement la même chose."},{l:"D",t:"« Enregistrer sous » supprime l'ancienne version du fichier automatiquement."}],answer:"b"},
-  {q:"Quel format de fichier est le plus adapté pour partager un document dont on veut préserver la mise en forme et empêcher les modifications faciles ?",choices:[{l:"A",t:".docx"},{l:"B",t:".txt"},{l:"C",t:".xlsx"},{l:"D",t:".pdf"}],answer:"d"},
-  {q:"Dans un moteur de recherche, quel opérateur permet de chercher une expression exacte ?",choices:[{l:"A",t:"Des parenthèses : (intelligence artificielle)"},{l:"B",t:'Des guillemets : "intelligence artificielle"'},{l:"C",t:"Un astérisque : *intelligence artificielle*"},{l:"D",t:"Un signe plus : +intelligence artificielle"}],answer:"b"},
-  {q:"Dans un tableur, les cellules C2 à C6 contiennent les valeurs 8, 12, 5, 15, 10. Que retourne la formule =MAX(C2:C6) ?",choices:[{l:"A",t:"10"},{l:"B",t:"50"},{l:"C",t:"15"},{l:"D",t:"12"}],answer:"c"},
-  {q:"Soit la feuille suivante dans un tableur (colonne A = NOM, colonne B = NOTE). Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",choices:[{l:"A",t:"=MAX(B2:B8)"},{l:"B",t:"=SOMME(A2:A8)"},{l:"C",t:"=MOYENNE(A2:A8)"},{l:"D",t:"=MOYENNE(B2:B8)"}],answer:"d"},
-  {q:"Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",choices:[{l:"A",t:"Un type de filtre utilisé pour améliorer la qualité des photos."},{l:"B",t:"Un espace virtuel où les utilisateurs peuvent discuter en privé."},{l:"C",t:"Un algorithme qui montre uniquement du contenu similaire à celui déjà consulté par l'utilisateur."},{l:"D",t:"Un groupe de hashtags populaires."}],answer:"c"},
-  {q:"Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",choices:[{l:"A",t:"Facebook"},{l:"B",t:"Twitter"},{l:"C",t:"LinkedIn"},{l:"D",t:"Instagram"}],answer:"c"},
-  {q:"Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",choices:[{l:"A",t:"Phishing"},{l:"B",t:"Spoofing"},{l:"C",t:"Harcèlement en ligne"},{l:"D",t:"Impersonation"}],answer:"d"},
-  {q:"Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",choices:[{l:"A",t:"Follower farming"},{l:"B",t:"Social spamming"},{l:"C",t:"Astroturfing"},{l:"D",t:"Hashtagging"}],answer:"a"},
-  {q:"Qu'est-ce que le « droit à l'oubli » sur Internet ?",choices:[{l:"A",t:"Le droit de supprimer son compte sur n'importe quel réseau social sans justification."},{l:"B",t:"Le droit de ne pas être photographié dans un lieu public."},{l:"C",t:"Le droit de demander la suppression de ses données personnelles auprès d'un service en ligne."},{l:"D",t:"Le droit d'accéder anonymement à tous les services en ligne sans créer de compte."}],answer:"c"},
-  {q:"Qu'est-ce qu'un mot de passe fort ?",choices:[{l:"A",t:"Un mot de passe composé uniquement de lettres minuscules facile à retenir."},{l:"B",t:"Un mot de passe combinant majuscules, minuscules, chiffres et caractères spéciaux d'au moins 12 caractères."},{l:"C",t:"Un mot de passe identique sur tous vos comptes pour ne pas l'oublier."},{l:"D",t:"Un mot de passe composé de votre prénom suivi de votre année de naissance."}],answer:"b"},
-  {q:"Qu'est-ce que le phishing (hameçonnage) ?",choices:[{l:"A",t:"Une technique de compression de fichiers pour les envoyer par email."},{l:"B",t:"Un logiciel permettant de filtrer les spams dans une boîte mail."},{l:"C",t:"Un virus qui chiffre les fichiers de l'ordinateur et demande une rançon."},{l:"D",t:"Une tentative frauduleuse d'obtenir des informations personnelles en se faisant passer pour une entité de confiance."}],answer:"d"},
-  {q:"Parmi ces propositions, laquelle décrit le mieux le rôle d'un système d'exploitation ?",choices:[{l:"A",t:"Gérer les ressources matérielles et logicielles de l'ordinateur et faire l'interface entre l'utilisateur et la machine."},{l:"B",t:"Permettre uniquement la connexion à Internet et la navigation sur le web."},{l:"C",t:"Créer et modifier des documents texte, des tableurs et des présentations."},{l:"D",t:"Protéger l'ordinateur contre les virus et les logiciels malveillants."}],answer:"a"},
-  {q:"Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x après l'exécution de cet algorithme ?",choices:[{l:"A",t:"5"},{l:"B",t:"6"},{l:"C",t:"4"},{l:"D",t:"8"}],answer:"b"},
-  {q:"Soit un algorithme qui commence avec une variable x égale à 0, qui exécute une boucle « tant que x < 100, x = x + 5 ». Combien d'itérations sont nécessaires pour que l'algorithme s'arrête ?",choices:[{l:"A",t:"20"},{l:"B",t:"19"},{l:"C",t:"21"},{l:"D",t:"25"}],answer:"a"},
-  {q:"Supposons que vous ayez un algorithme qui commence avec une variable x égale à 0, puis exécute une boucle « pour i allant de 1 à n, x = x + i ». Quelle est la valeur finale de x si n = 4 ?",choices:[{l:"A",t:"i"},{l:"B",t:"4"},{l:"C",t:"15"},{l:"D",t:"10"}],answer:"d"},
-  {q:"Qu'est-ce qu'une bibliographie dans un document textuel ?",choices:[{l:"A",t:"Une liste des éditeurs potentiels du document."},{l:"B",t:"Une liste des sources et des références citées dans le document."},{l:"C",t:"Une section du document réservée aux graphiques et aux images."},{l:"D",t:"Une section du document contenant des exemples pratiques."}],answer:"b"},
-  {q:"Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",choices:[{l:"A",t:"La facilité d'accès au document sur Internet."},{l:"B",t:"La simplicité du langage utilisé dans le document."},{l:"C",t:"La convivialité du design du document."},{l:"D",t:"L'adaptation du document pour qu'il soit utilisable par un large public, y compris les personnes handicapées."}],answer:"d"},
-  {q:"Qu'est-ce qu'une infographie ?",choices:[{l:"A",t:"Un type de diagramme à secteurs."},{l:"B",t:"Une représentation visuelle des données."},{l:"C",t:"Un texte explicatif d'un tableau de données."},{l:"D",t:"Un document qui agrège les données entre elles."}],answer:"b"},
+const QUESTIONS_DIGITAL = [
+  {type:"single",q:"Dans un tableur, la cellule A1 contient 200 et la cellule A2 contient 50. Quelle formule affiche le pourcentage que représente A2 par rapport à A1 ?",choices:[{l:"A",t:"=A1/A2*100"},{l:"B",t:"=A2-A1"},{l:"C",t:"=A2/A1*100"},{l:"D",t:"=A1*A2/100"}],answer:"c"},
+  {type:"single",q:"Quelle est la différence entre « Enregistrer » et « Enregistrer sous » dans un traitement de texte ?",choices:[{l:"A",t:"« Enregistrer » crée une copie du fichier, « Enregistrer sous » met à jour l'original."},{l:"B",t:"« Enregistrer » met à jour le fichier existant, « Enregistrer sous » crée un nouveau fichier ou change l'emplacement."},{l:"C",t:"Les deux fonctions font exactement la même chose."},{l:"D",t:"« Enregistrer sous » supprime l'ancienne version du fichier automatiquement."}],answer:"b"},
+  {type:"single",q:"Quel format de fichier est le plus adapté pour partager un document dont on veut préserver la mise en forme et empêcher les modifications faciles ?",choices:[{l:"A",t:".docx"},{l:"B",t:".txt"},{l:"C",t:".xlsx"},{l:"D",t:".pdf"}],answer:"d"},
+  {type:"single",q:"Dans un moteur de recherche, quel opérateur permet de chercher une expression exacte ?",choices:[{l:"A",t:"Des parenthèses : (intelligence artificielle)"},{l:"B",t:'Des guillemets : "intelligence artificielle"'},{l:"C",t:"Un astérisque : *intelligence artificielle*"},{l:"D",t:"Un signe plus : +intelligence artificielle"}],answer:"b"},
+  {type:"single",q:"Dans un tableur, les cellules C2 à C6 contiennent les valeurs 8, 12, 5, 15, 10. Que retourne la formule =MAX(C2:C6) ?",choices:[{l:"A",t:"10"},{l:"B",t:"50"},{l:"C",t:"15"},{l:"D",t:"12"}],answer:"c"},
+  {type:"single",q:"Les notes B2:B8 sont : 17, 15, 14, 12, 11, 7, 4,5. La cellule B10 affiche 11,5. Quelle est la formule de la cellule B10 ?",choices:[{l:"A",t:"=MAX(B2:B8)"},{l:"B",t:"=SOMME(A2:A8)"},{l:"C",t:"=MOYENNE(A2:A8)"},{l:"D",t:"=MOYENNE(B2:B8)"}],answer:"d"},
+  {type:"single",q:"Qu'est-ce qu'une « bulle de filtres » sur les réseaux sociaux ?",choices:[{l:"A",t:"Un type de filtre utilisé pour améliorer la qualité des photos."},{l:"B",t:"Un espace virtuel où les utilisateurs peuvent discuter en privé."},{l:"C",t:"Un algorithme qui montre uniquement du contenu similaire à celui déjà consulté par l'utilisateur."},{l:"D",t:"Un groupe de hashtags populaires."}],answer:"c"},
+  {type:"single",q:"Quel réseau social est principalement utilisé pour établir des connexions professionnelles et rechercher des opportunités d'emploi ?",choices:[{l:"A",t:"Facebook"},{l:"B",t:"Twitter"},{l:"C",t:"LinkedIn"},{l:"D",t:"Instagram"}],answer:"c"},
+  {type:"single",q:"Quel terme désigne le fait de créer de faux comptes ou de fausses identités sur les réseaux sociaux pour tromper les autres utilisateurs ?",choices:[{l:"A",t:"Phishing"},{l:"B",t:"Spoofing"},{l:"C",t:"Harcèlement en ligne"},{l:"D",t:"Impersonation"}],answer:"d"},
+  {type:"single",q:"Quel terme désigne la pratique consistant à acheter de faux abonnés, likes ou commentaires sur les réseaux sociaux pour paraître plus populaire ?",choices:[{l:"A",t:"Follower farming"},{l:"B",t:"Social spamming"},{l:"C",t:"Astroturfing"},{l:"D",t:"Hashtagging"}],answer:"a"},
+  {type:"single",q:"Qu'est-ce que le « droit à l'oubli » sur Internet ?",choices:[{l:"A",t:"Le droit de supprimer son compte sur n'importe quel réseau social sans justification."},{l:"B",t:"Le droit de ne pas être photographié dans un lieu public."},{l:"C",t:"Le droit de demander la suppression de ses données personnelles auprès d'un service en ligne."},{l:"D",t:"Le droit d'accéder anonymement à tous les services en ligne sans créer de compte."}],answer:"c"},
+  {type:"single",q:"Qu'est-ce qu'un mot de passe fort ?",choices:[{l:"A",t:"Un mot de passe composé uniquement de lettres minuscules facile à retenir."},{l:"B",t:"Un mot de passe combinant majuscules, minuscules, chiffres et caractères spéciaux d'au moins 12 caractères."},{l:"C",t:"Un mot de passe identique sur tous vos comptes pour ne pas l'oublier."},{l:"D",t:"Un mot de passe composé de votre prénom suivi de votre année de naissance."}],answer:"b"},
+  {type:"single",q:"Qu'est-ce que le phishing (hameçonnage) ?",choices:[{l:"A",t:"Une technique de compression de fichiers pour les envoyer par email."},{l:"B",t:"Un logiciel permettant de filtrer les spams dans une boîte mail."},{l:"C",t:"Un virus qui chiffre les fichiers de l'ordinateur et demande une rançon."},{l:"D",t:"Une tentative frauduleuse d'obtenir des informations personnelles en se faisant passer pour une entité de confiance."}],answer:"d"},
+  {type:"single",q:"Parmi ces propositions, laquelle décrit le mieux le rôle d'un système d'exploitation ?",choices:[{l:"A",t:"Gérer les ressources matérielles et logicielles de l'ordinateur et faire l'interface entre l'utilisateur et la machine."},{l:"B",t:"Permettre uniquement la connexion à Internet et la navigation sur le web."},{l:"C",t:"Créer et modifier des documents texte, des tableurs et des présentations."},{l:"D",t:"Protéger l'ordinateur contre les virus et les logiciels malveillants."}],answer:"a"},
+  {type:"single",q:"Soit x=0, boucle « tant que x < 5, x = x + 2 ». Quelle est la valeur finale de x ?",choices:[{l:"A",t:"5"},{l:"B",t:"6"},{l:"C",t:"4"},{l:"D",t:"8"}],answer:"b"},
+  {type:"single",q:"Soit x=0, boucle « tant que x < 100, x = x + 5 ». Combien d'itérations pour que l'algorithme s'arrête ?",choices:[{l:"A",t:"20"},{l:"B",t:"19"},{l:"C",t:"21"},{l:"D",t:"25"}],answer:"a"},
+  {type:"single",q:"Boucle « pour i allant de 1 à n, x = x + i » avec x=0. Quelle est la valeur finale de x si n = 4 ?",choices:[{l:"A",t:"i"},{l:"B",t:"4"},{l:"C",t:"15"},{l:"D",t:"10"}],answer:"d"},
+  {type:"single",q:"Qu'est-ce qu'une bibliographie dans un document textuel ?",choices:[{l:"A",t:"Une liste des éditeurs potentiels du document."},{l:"B",t:"Une liste des sources et des références citées dans le document."},{l:"C",t:"Une section du document réservée aux graphiques et aux images."},{l:"D",t:"Une section du document contenant des exemples pratiques."}],answer:"b"},
+  {type:"single",q:"Qu'est-ce que l'accessibilité dans le contexte de la création de documents textuels ?",choices:[{l:"A",t:"La facilité d'accès au document sur Internet."},{l:"B",t:"La simplicité du langage utilisé dans le document."},{l:"C",t:"La convivialité du design du document."},{l:"D",t:"L'adaptation du document pour qu'il soit utilisable par un large public, y compris les personnes handicapées."}],answer:"d"},
+  {type:"single",q:"Qu'est-ce qu'une infographie ?",choices:[{l:"A",t:"Un type de diagramme à secteurs."},{l:"B",t:"Une représentation visuelle des données."},{l:"C",t:"Un texte explicatif d'un tableau de données."},{l:"D",t:"Un document qui agrège les données entre elles."}],answer:"b"},
+];
+
+// ══════════════════════════════════════════════════════════
+//  QUESTIONS — MODULE ANALYSE DOCUMENTAIRE (OGM)
+// ══════════════════════════════════════════════════════════
+const QUESTIONS_DOCS = [
+  // ── REPÉRAGE (Q1–Q6) : single choice ──
+  {type:"single", section:"reperage",
+   q:"Quelle était, en millions d'hectares, la surface totale de cultures génétiquement modifiées aux États-Unis en 2012 ?",
+   choices:[{l:"A",t:"Environ 8,5"},{l:"B",t:"Environ 7"},{l:"C",t:"Environ 175"},{l:"D",t:"Environ 70"}],
+   answer:"d"},
+  {type:"single", section:"reperage",
+   q:"Quelle proportion de la population de l'Union Européenne était, en 2010, contre la présence d'OGM dans l'alimentation ?",
+   choices:[{l:"A",t:"70,9%"},{l:"B",t:"28%"},{l:"C",t:"33%"},{l:"D",t:"61%"}],
+   answer:"d"},
+  {type:"single", section:"reperage",
+   q:"Qu'est-ce que le « Terminator » ?",
+   choices:[{l:"A",t:"Un puissant insecticide."},{l:"B",t:"Une semence stérile."},{l:"C",t:"Un puissant herbicide."},{l:"D",t:"Une puissante multinationale américaine."}],
+   answer:"b"},
+  {type:"single", section:"reperage",
+   q:"Que désigne l'Agrobacterium tumefaciens ?",
+   choices:[{l:"A",t:"Une bactérie."},{l:"B",t:"Un gène."},{l:"C",t:"Un organisme génétiquement modifié."},{l:"D",t:"Un chromosome."}],
+   answer:"a"},
+  {type:"single", section:"reperage",
+   q:"Quelle institution remplace l'accord général sur les tarifs douaniers et le commerce en 1995 ?",
+   choices:[{l:"A",t:"La Convention sur la diversité biologique."},{l:"B",t:"Le Codex alimentarius."},{l:"C",t:"Le protocole de biosécurité."},{l:"D",t:"L'Organisation Mondiale du Commerce."}],
+   answer:"d"},
+  {type:"single", section:"reperage",
+   q:"Combien de cas d'effets indésirables potentiellement liés à la consommation de maïs transgénique StarLink ont été recensés par les autorités américaines ?",
+   choices:[{l:"A",t:"40"},{l:"B",t:"28"},{l:"C",t:"200"},{l:"D",t:"3"}],
+   answer:"a"},
+
+  // ── ANALYSE (Q7–Q12) : multi choice ──
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Quel message les deux images de l'ILLUSTRATION 4 véhiculent-elles ?",
+   choices:[
+     {l:"A",t:"Les OGM sont une solution au problème de la faim dans le monde."},
+     {l:"B",t:"Les OGM permettent d'améliorer les techniques et les rendements agricoles."},
+     {l:"C",t:"Les OGM sont responsables de nombreuses maladies à travers le monde et dégradent la planète."},
+     {l:"D",t:"Les citoyens sont contraints de consommer des aliments contenant des OGM."},
+     {l:"E",t:"Les citoyens sont favorables à la présence d'OGM dans leur alimentation."}
+   ],
+   answers:["a","d"]},
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Pour quelles raisons les consommateurs sont-ils méfiants voire hostiles à l'égard des OGM ?",
+   choices:[
+     {l:"A",t:"Il n'existe aucune institution chargée de contrôler les OGM."},
+     {l:"B",t:"Les grandes firmes multinationales de biotechnologie sont accusées de lobbying."},
+     {l:"C",t:"La traçabilité des OGM est insuffisante."},
+     {l:"D",t:"La surface cultivée d'OGM croît de manière exponentielle au fil des années."},
+     {l:"E",t:"Les OGM présentent des risques sanitaires et environnementaux majeurs."}
+   ],
+   answers:["b","c","e"]},
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Quels principes du protocole de Carthagène entrent en contradiction avec le cadre réglementaire fixé par l'OMC ?",
+   choices:[
+     {l:"A",t:"Il interdit le commerce d'OVM au nom du principe de précaution."},
+     {l:"B",t:"Il permet aux pays membres de donner leur accord avant l'entrée d'OVM sur leur territoire."},
+     {l:"C",t:"Il vise à assurer le partage équitable des bénéfices tirés de l'exploitation des ressources génétiques."},
+     {l:"D",t:"Il interdit l'exportation de certains OVM jugés « à risque »."},
+     {l:"E",t:"Il impose l'étiquetage des produits pouvant contenir des OVM."}
+   ],
+   answers:["a","b"]},
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Quels sont les reproches formulés à l'égard des grandes firmes multinationales semencières ?",
+   choices:[
+     {l:"A",t:"Leurs dépenses en Recherche et Développement sont insuffisantes."},
+     {l:"B",t:"Elles détiennent une part trop importante du marché des semences."},
+     {l:"C",t:"Les brevets qu'elles détiennent nuisent à la circulation de la connaissance."},
+     {l:"D",t:"Elles sont créatrices de dépendances préjudiciables dans le domaine agricole."},
+     {l:"E",t:"Elles sont tellement nombreuses qu'elles écrasent les agriculteurs indépendants."}
+   ],
+   answers:["b","c","d"]},
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Quels arguments permettent de justifier l'existence de brevets sur le vivant ?",
+   choices:[
+     {l:"A",t:"Ils permettent à travers la quête d'intérêts personnels d'aboutir à l'intérêt général."},
+     {l:"B",t:"Ils enlèvent à la concurrence tout espoir d'exploiter et commercialiser l'invention protégée."},
+     {l:"C",t:"Ils favorisent la circulation de la connaissance et améliorent la compétitivité d'une économie."},
+     {l:"D",t:"Ils garantissent une exclusivité perpétuelle d'exploitation à l'inventeur, ce qui l'incite à innover."},
+     {l:"E",t:"Ils favorisent l'innovation en augmentant les perspectives de profits des investisseurs."}
+   ],
+   answers:["a","c","e"]},
+  {type:"multi", section:"analyse",
+   hint:"Plusieurs réponses attendues — cochez toutes les bonnes réponses (tout ou rien).",
+   q:"Pourquoi faut-il nuancer les craintes suscitées par les OGM ?",
+   choices:[
+     {l:"A",t:"La présence d'OGM dans l'alimentation humaine est presque inexistante en France."},
+     {l:"B",t:"Certains risques environnementaux imputés aux OGM ne sont pas établis et relèvent uniquement de l'hypothèse."},
+     {l:"C",t:"Le poids de la surface cultivée avec des plants génétiquement modifiés est négligeable au niveau mondial."},
+     {l:"D",t:"Les OGM favorisent la diversité des espèces animales et végétales."},
+     {l:"E",t:"Les OGM pourraient permettre de développer une agriculture durable."},
+     {l:"F",t:"(aucune autre option)"}
+   ],
+   answers:["b","e"]},
+
+  // ── SYNTHÈSE (Q13–Q20) : fill-in ──
+  {type:"fill", section:"synthese",
+   q:"Introduction — Complétez l'accroche : « L'affaire du [x], grandement médiatisée, a mis en exergue les [y] liés à l'usage des OGM dans l'alimentation. »",
+   hint:"Sélectionnez la valeur correcte pour chaque variable.",
+   vars:[
+     {key:"x", label:"Sujet de l'affaire", answer:"maïs Starlink",
+      choices:[{val:"« Golden Rice »"},{val:"« Terminator »"},{val:"maïs Starlink"},{val:"saccage de plants transgéniques"}]},
+     {key:"y", label:"Ce qui a été mis en exergue", answer:"risques",
+      choices:[{val:"progrès"},{val:"avantages"},{val:"risques"},{val:"délits"}]}
+   ]},
+  {type:"single", section:"synthese",
+   q:"Introduction — Sélectionnez la problématique appropriée pour traiter le sujet.",
+   choices:[
+     {l:"A",t:"Pour quelles raisons les craintes liées à l'usage des OGM doivent-elles être nuancées ?"},
+     {l:"B",t:"Dans quelle mesure faut-il interdire l'utilisation des OGM ?"},
+     {l:"C",t:"Comment concilier précaution et progrès en matière d'usage des OGM ?"},
+     {l:"D",t:"En quoi le recours aux OGM présente-t-il des risques pour la société ?"}
+   ],
+   answer:"d"},
+  {type:"single", section:"synthese",
+   q:"Développement — Sélectionnez le titre approprié pour la première partie du raisonnement.",
+   choices:[
+     {l:"A",t:"Des risques majeurs liés à l'absence de régulation nationale et internationale en matière d'OGM."},
+     {l:"B",t:"Les OGM, une solution contre la pauvreté et la faim dans le monde."},
+     {l:"C",t:"Un principe de précaution justifié par l'existence de risques sanitaires et environnementaux."},
+     {l:"D",t:"Les OGM à l'origine de progrès agricoles et médicaux significatifs."}
+   ],
+   answer:"c"},
+  {type:"fill", section:"synthese",
+   q:"Développement — Complétez le résumé de la 1ère partie : « …porteur d'un ensemble de [w] avérés au niveau environnemental mais également au niveau [x]… insuffisances en matière d'information et [y] affectent la traçabilité… et justifient [z] des consommateurs. »",
+   hint:"Sélectionnez la valeur correcte pour chaque variable.",
+   vars:[
+     {key:"w", label:"Type de conséquences avérées", answer:"risques",
+      choices:[{val:"risques"},{val:"reculs"},{val:"progrès"},{val:"bouleversements"}]},
+     {key:"x", label:"Niveau également concerné", answer:"sanitaire",
+      choices:[{val:"économique"},{val:"sanitaire"},{val:"social"},{val:"politique"}]},
+     {key:"y", label:"Insuffisances en matière de…", answer:"d'étiquetage",
+      choices:[{val:"de prévention"},{val:"d'institutions"},{val:"de marketing"},{val:"d'étiquetage"}]},
+     {key:"z", label:"Ce que ces insuffisances justifient", answer:"la méfiance",
+      choices:[{val:"la méfiance"},{val:"les actes de saccage"},{val:"l'enthousiasme"},{val:"le soutien"}]}
+   ]},
+  {type:"single", section:"synthese",
+   q:"Développement — Sélectionnez le titre approprié pour la deuxième partie du raisonnement.",
+   choices:[
+     {l:"A",t:"Une privatisation du vivant source de domination et de dépendance."},
+     {l:"B",t:"Un principe de précaution bafoué par des États soumis aux géants de l'agrobusiness."},
+     {l:"C",t:"Des multinationales de biotechnologie sources d'innovation et de croissance pour les nations."},
+     {l:"D",t:"Un cadre règlementaire extrêmement contraignant qui limite les risques liés à l'usage des OGM."}
+   ],
+   answer:"a"},
+  {type:"fill", section:"synthese",
+   q:"Développement — Complétez le résumé de la 2ème partie : « …a colonisé le marché des semences en s'appropriant la quasi-totalité [w]… ce qui [x] la circulation des connaissances… place les agriculteurs dans une situation de [y]… ne peuvent constituer un remède efficace contre [z]. »",
+   hint:"Sélectionnez la valeur correcte pour chaque variable.",
+   vars:[
+     {key:"w", label:"Ce qui a été approprié", answer:"des parts de marché",
+      choices:[{val:"des surfaces cultivées"},{val:"des variétés de plants"},{val:"des parts de marché"},{val:"des exportations"}]},
+     {key:"x", label:"Effet sur la circulation des connaissances", answer:"affaiblit",
+      choices:[{val:"affaiblit"},{val:"optimise"},{val:"encourage"},{val:"anéantit"}]},
+     {key:"y", label:"Situation des agriculteurs", answer:"grande dépendance",
+      choices:[{val:"faillite économique"},{val:"croissance sans précédent"},{val:"grande dépendance"},{val:"supériorité"}]},
+     {key:"z", label:"Ce contre quoi ils ne sont pas un remède", answer:"la faim dans le monde",
+      choices:[{val:"la déforestation"},{val:"l'extrême pauvreté"},{val:"la pollution atmosphérique"},{val:"la faim dans le monde"}]}
+   ]},
+  {type:"fill", section:"synthese",
+   q:"Conclusion — Complétez le bilan : « …la répulsion des opposants semble bel et bien [x], au regard des risques que ces organismes peuvent représenter ainsi que des problèmes [y] qu'ils soulèvent. »",
+   hint:"Sélectionnez la valeur correcte pour chaque variable.",
+   vars:[
+     {key:"x", label:"Qualification de la répulsion", answer:"fondée",
+      choices:[{val:"insuffisante"},{val:"fondée"},{val:"exagérée"},{val:"injustifiée"}]},
+     {key:"y", label:"Type de problèmes soulevés", answer:"éthiques",
+      choices:[{val:"éthiques"},{val:"culturels"},{val:"sociaux"},{val:"géopolitiques"}]}
+   ]},
+  {type:"fill", section:"synthese",
+   q:"Conclusion — Complétez l'ouverture : « Il paraît intéressant de se demander en quoi [x] des cadres règlementaires de l'OMC et [y] peut permettre de mieux atteindre les objectifs de développement durable. »",
+   hint:"Sélectionnez la valeur correcte pour chaque variable.",
+   vars:[
+     {key:"x", label:"Relation entre cadres règlementaires", answer:"la convergence",
+      choices:[{val:"la suspension"},{val:"la convergence"},{val:"l'abrogation"},{val:"la dissociation"}]},
+     {key:"y", label:"Second cadre concerné", answer:"du Protocole de Carthagène",
+      choices:[{val:"de l'Union Européenne"},{val:"du Protocole de Carthagène"},{val:"du dispositif de biovigilance"},{val:"des États-Unis"}]}
+   ]},
 ];
 
 init();
