@@ -463,28 +463,6 @@ let examState = {
 let pdfOpen = false;
 
 // ══════════════════════════════════════════════════════════
-//  MODULE DEFINITIONS
-// ══════════════════════════════════════════════════════════
-const MODULE_CONFIG = {
-  digital: {
-    label: "Compétences Digitales",
-    icon: "💻",
-    color: "digital",
-    questions: QUESTIONS_DIGITAL,
-    hasPdf: false,
-    pdfPath: null
-  },
-  docs: {
-    label: "Analyse Documentaire",
-    icon: "📄",
-    color: "docs",
-    questions: QUESTIONS_DOCS,
-    hasPdf: true,
-    pdfPath: DOCS_PDF_PATH
-  }
-};
-
-// ══════════════════════════════════════════════════════════
 //  API
 // ══════════════════════════════════════════════════════════
 async function apiGet(params) {
@@ -1396,6 +1374,25 @@ const QUESTIONS_DOCS = [
       choices:[{val:"de l'Union Européenne"},{val:"du Protocole de Carthagène"},{val:"du dispositif de biovigilance"},{val:"des États-Unis"}]}
    ]},
 ];
+
+const MODULE_CONFIG = {
+  digital: {
+    label: "Compétences Digitales",
+    icon: "💻",
+    color: "digital",
+    questions: QUESTIONS_DIGITAL,
+    hasPdf: false,
+    pdfPath: null
+  },
+  docs: {
+    label: "Analyse Documentaire",
+    icon: "📄",
+    color: "docs",
+    questions: QUESTIONS_DOCS,
+    hasPdf: true,
+    pdfPath: DOCS_PDF_PATH
+  }
+};
 
 init();
 </script>
