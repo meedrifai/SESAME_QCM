@@ -388,7 +388,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
         <svg width="16" height="16" viewBox="0 0 16 16"><path d="M10 3L4 8l6 5V3z" fill="currentColor"/></svg>Précédent
       </button>
       <div class="nav-center">
-        <button class="btn btn-danger" id="btn-submit" onclick="confirmSubmit()" disabled>Soumettre</button>
+        <button class="btn btn-danger" id="btn-submit" onclick="confirmSubmit()">Soumettre</button>
         <div class="submit-note" id="submit-note">Répondez à toutes les questions</div>
       </div>
       <button class="btn btn-secondary" id="btn-next" onclick="navigate(1)">
@@ -440,7 +440,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min
 // ══════════════════════════════════════════════════════════
 const SCRIPT_URL       = "https://script.google.com/macros/s/AKfycbxdWEyYJKjeTmCBH81NjpGxh_GXGadD6MZwRnvoC7dr8Eq6k3nKSK9DYvEHTQCrHyhaCA/exec";
   
-const EXAM_DURATION    = 20 * 60;
+const EXAM_DURATION_DIGITAL = 20 * 60;
+const EXAM_DURATION_DOCS    = 120 * 60;
 const ADMIN_PWD_KEY    = "sesame:adminPwd";
 const DEFAULT_ADMIN_PWD= "sesame2025";
 // Chemin vers le PDF du dossier documentaire (à la racine du projet)
@@ -803,7 +804,7 @@ function launchExam(cand, module) {
   examState.candidateId = cand.id;
   examState.currentQ    = 0;
   examState.answers     = new Array(cfg.questions.length).fill(null);
-  examState.secondsLeft = EXAM_DURATION;
+  examState.secondsLeft = module === "docs" ? EXAM_DURATION_DOCS : EXAM_DURATION_DIGITAL;
   examState.submitted   = false;
 
   document.getElementById("display-name").textContent = `${cand.prenom} ${cand.nom}`;
@@ -941,7 +942,7 @@ function renderQuestion() {
   document.getElementById("btn-prev").disabled = i === 0;
   document.getElementById("btn-next").disabled = i === qs.length - 1;
   const allAnswered = examState.answers.every((a, idx) => isAnswered(a, qs[idx]));
-  document.getElementById("btn-submit").disabled = !allAnswered;
+  document.getElementById("btn-submit").disabled = false;
   document.getElementById("submit-note").textContent = allAnswered
     ? "Toutes les questions sont répondues !"
     : `${qs.length - answered} question(s) sans réponse`;
@@ -1025,8 +1026,10 @@ function selectFill(qi, varKey, val) {
 function confirmSubmit() {
   const qs = MODULE_CONFIG[examState.module].questions;
   const u = examState.answers.filter((a,i) => !isAnswered(a, qs[i])).length;
-  if (u > 0) { showToast(`Il reste ${u} question(s) sans réponse.`); return; }
-  if (confirm("Êtes-vous sûr(e) de vouloir soumettre votre examen ?")) submitExam(false);
+  const msg = u > 0
+    ? `Il reste ${u} question(s) sans réponse. Voulez-vous quand même soumettre ?`
+    : "Êtes-vous sûr(e) de vouloir soumettre votre examen ?";
+  if (confirm(msg)) submitExam(false);
 }
 
 async function submitExam(timeUp) {
@@ -1035,7 +1038,8 @@ async function submitExam(timeUp) {
   clearInterval(examState.timerInterval);
   closePdf();
 
-  const usedSec = EXAM_DURATION - examState.secondsLeft;
+  const totalDuration = examState.module === "docs" ? EXAM_DURATION_DOCS : EXAM_DURATION_DIGITAL;
+  const usedSec = totalDuration - examState.secondsLeft;
   const temps = `${String(Math.floor(usedSec/60)).padStart(2,"0")}:${String(usedSec%60).padStart(2,"0")}`;
   const qs = MODULE_CONFIG[examState.module].questions;
   let score = 0;
