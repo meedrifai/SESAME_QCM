@@ -206,7 +206,7 @@ Réponds UNIQUEMENT avec le JSON pur — aucun texte autour, aucune balise markd
     const response = await fetch(REPORT_OR_URL, {
         method: "POST",
         headers: {
-            "Authorization": "Bearer " + apiKey,
+            "Authorization": `Bearer ${apiKey}`,
             "Content-Type": "application/json",
             "HTTP-Referer": window.location.origin,
             "X-Title": "SESAME Exam Platform"
