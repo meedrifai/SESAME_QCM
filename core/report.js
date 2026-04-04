@@ -9,7 +9,7 @@
 //    localStorage["sesame:openrouterKey"]
 // ════════════════════════════════════════════════════════════════
 
-const REPORT_OR_KEY = "sesame:openrouterKey";
+const REPORT_OR_KEY = "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";
 const REPORT_OR_URL = "https://openrouter.ai/api/v1/chat/completions";
 const REPORT_DEEPSEEK = "deepseek/deepseek-chat";
 
@@ -25,7 +25,7 @@ const REPORT_MODULE_LABELS = {
 //  POINT D'ENTRÉE — appelé depuis le bouton admin
 // ══════════════════════════════════════════════════════════════
 async function generateCandidateReport(candidateId, prenom, nom) {
-    const apiKey = localStorage.setItem("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");
+    const apiKey = localStorage.setItem("REPORT_OR_KEY");
     if (!apiKey) {
         showToast("Clé OpenRouter manquante — configurez-la dans Paramètres.", "error");
         return;
