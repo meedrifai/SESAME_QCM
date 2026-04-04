@@ -9,166 +9,166 @@
 //    localStorage["sesame:openrouterKey"]
 // ════════════════════════════════════════════════════════════════
 
-const REPORT_OR_KEY     = "sesame:openrouterKey";
-const REPORT_OR_URL     = "https://openrouter.ai/api/v1/chat/completions";
-const REPORT_DEEPSEEK   = "deepseek/deepseek-chat";
+const REPORT_OR_KEY = "sesame:openrouterKey";
+const REPORT_OR_URL = "https://openrouter.ai/api/v1/chat/completions";
+const REPORT_DEEPSEEK = "deepseek/deepseek-chat";
 
 // Labels lisibles pour les modules (fallback si MODULE_MAP non dispo)
 const REPORT_MODULE_LABELS = {
-  digital: { label: "Compétences Digitales",    icon: "💻" },
-  docs:    { label: "Analyse Documentaire",      icon: "📄" },
-  maths:   { label: "Mathématiques",             icon: "📐" },
-  enjeux:  { label: "Enjeux Contemporains",      icon: "🌍" },
+    digital: { label: "Compétences Digitales", icon: "💻" },
+    docs: { label: "Analyse Documentaire", icon: "📄" },
+    maths: { label: "Mathématiques", icon: "📐" },
+    enjeux: { label: "Enjeux Contemporains", icon: "🌍" },
 };
 
 // ══════════════════════════════════════════════════════════════
 //  POINT D'ENTRÉE — appelé depuis le bouton admin
 // ══════════════════════════════════════════════════════════════
 async function generateCandidateReport(candidateId, prenom, nom) {
-  const apiKey = localStorage.getItem(REPORT_OR_KEY);
-  if (!apiKey) {
-    showToast("Clé OpenRouter manquante — configurez-la dans Paramètres.", "error");
-    return;
-  }
+    const apiKey = localStorage.setItem("REPORT_OR_KEY", input.value);
+    if (!apiKey) {
+        showToast("Clé OpenRouter manquante — configurez-la dans Paramètres.", "error");
+        return;
+    }
 
-  showOverlay("Récupération des résultats depuis Google Sheets…");
+    showOverlay("Récupération des résultats depuis Google Sheets…");
 
-  let rawData;
-  try {
-    rawData = await apiGet({ action: "getCandidateResults", prenom, nom });
-  } catch(e) {
+    let rawData;
+    try {
+        rawData = await apiGet({ action: "getCandidateResults", prenom, nom });
+    } catch (e) {
+        hideOverlay();
+        showToast("Erreur réseau : " + e.message, "error");
+        return;
+    }
+
+    if (!rawData.ok || !rawData.results || rawData.results.length === 0) {
+        hideOverlay();
+        showToast("Aucun résultat trouvé pour " + prenom + " " + nom + ".", "error");
+        return;
+    }
+
+    // Enrichir les résultats avec les questions détaillées
+    const enriched = rawData.results.map(r => reportEnrichModule(r));
+
+    showOverlay("Analyse IA en cours — DeepSeek 🤖…");
+
+    let analysis;
+    try {
+        analysis = await reportCallDeepSeek(prenom, nom, enriched, apiKey);
+    } catch (e) {
+        hideOverlay();
+        showToast("Erreur DeepSeek : " + e.message, "error");
+        return;
+    }
+
     hideOverlay();
-    showToast("Erreur réseau : " + e.message, "error");
-    return;
-  }
-
-  if (!rawData.ok || !rawData.results || rawData.results.length === 0) {
-    hideOverlay();
-    showToast("Aucun résultat trouvé pour " + prenom + " " + nom + ".", "error");
-    return;
-  }
-
-  // Enrichir les résultats avec les questions détaillées
-  const enriched = rawData.results.map(r => reportEnrichModule(r));
-
-  showOverlay("Analyse IA en cours — DeepSeek 🤖…");
-
-  let analysis;
-  try {
-    analysis = await reportCallDeepSeek(prenom, nom, enriched, apiKey);
-  } catch(e) {
-    hideOverlay();
-    showToast("Erreur DeepSeek : " + e.message, "error");
-    return;
-  }
-
-  hideOverlay();
-  reportRenderWindow(prenom, nom, enriched, analysis);
+    reportRenderWindow(prenom, nom, enriched, analysis);
 }
 
 // ══════════════════════════════════════════════════════════════
 //  ENRICHISSEMENT — croise réponses du Sheet avec MODULE_MAP
 // ══════════════════════════════════════════════════════════════
 function reportEnrichModule(result) {
-  const { moduleId, score, total, date, temps, auto, answers } = result;
+    const { moduleId, score, total, date, temps, auto, answers } = result;
 
-  const modCfg  = (typeof MODULE_MAP !== "undefined") ? MODULE_MAP[moduleId] : null;
-  const fallback = REPORT_MODULE_LABELS[moduleId] || { label: moduleId, icon: "📋" };
-  const label    = modCfg?.label  || fallback.label;
-  const icon     = modCfg?.icon   || fallback.icon;
+    const modCfg = (typeof MODULE_MAP !== "undefined") ? MODULE_MAP[moduleId] : null;
+    const fallback = REPORT_MODULE_LABELS[moduleId] || { label: moduleId, icon: "📋" };
+    const label = modCfg?.label || fallback.label;
+    const icon = modCfg?.icon || fallback.icon;
 
-  if (!modCfg || !modCfg.questions) {
-    // Pas de config locale — on retourne les données brutes
-    return { moduleId, label, icon, score, total, date, temps, auto, questions: [], rawAnswers: answers };
-  }
-
-  const questions = modCfg.questions.map((q, idx) => {
-    const qKey         = "Q" + (idx + 1);
-    const studentRaw   = answers[qKey] || "—";
-    const skipped      = studentRaw === "—";
-
-    let correct = false, studentText = studentRaw, correctText = "";
-
-    if (!skipped) {
-      if (q.type === "single") {
-        correct      = studentRaw === q.answer;
-        const sc     = q.choices.find(c => c.l.toLowerCase() === studentRaw);
-        const cc     = q.choices.find(c => c.l.toLowerCase() === q.answer);
-        studentText  = sc ? sc.l + ". " + sc.t : studentRaw;
-        correctText  = cc ? cc.l + ". " + cc.t : q.answer;
-
-      } else if (q.type === "multi") {
-        const given    = studentRaw.split(",").map(s => s.trim()).filter(Boolean);
-        const expected = (q.answers || []).slice().sort();
-        correct        = given.slice().sort().join(",") === expected.join(",");
-        studentText    = given.map(l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? c.l : l; }).join(", ") || "—";
-        correctText    = expected.map(l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? c.l : l; }).join(", ");
-
-      } else if (q.type === "fill") {
-        const parts = studentRaw.split("/");
-        correct     = q.vars && q.vars.every((v, i) => parts[i] === v.answer);
-        studentText = q.vars ? q.vars.map((v, i) => "[" + v.key + "]=" + (parts[i] || "—")).join(", ") : studentRaw;
-        correctText = q.vars ? q.vars.map(v => "[" + v.key + "]=" + v.answer).join(", ") : "";
-      }
+    if (!modCfg || !modCfg.questions) {
+        // Pas de config locale — on retourne les données brutes
+        return { moduleId, label, icon, score, total, date, temps, auto, questions: [], rawAnswers: answers };
     }
 
-    return {
-      num: idx + 1,
-      text: q.q,
-      type: q.type,
-      section: q.section || "",
-      correct,
-      skipped,
-      studentText,
-      correctText,
-    };
-  });
+    const questions = modCfg.questions.map((q, idx) => {
+        const qKey = "Q" + (idx + 1);
+        const studentRaw = answers[qKey] || "—";
+        const skipped = studentRaw === "—";
 
-  return { moduleId, label, icon, score, total, date, temps, auto, questions };
+        let correct = false, studentText = studentRaw, correctText = "";
+
+        if (!skipped) {
+            if (q.type === "single") {
+                correct = studentRaw === q.answer;
+                const sc = q.choices.find(c => c.l.toLowerCase() === studentRaw);
+                const cc = q.choices.find(c => c.l.toLowerCase() === q.answer);
+                studentText = sc ? sc.l + ". " + sc.t : studentRaw;
+                correctText = cc ? cc.l + ". " + cc.t : q.answer;
+
+            } else if (q.type === "multi") {
+                const given = studentRaw.split(",").map(s => s.trim()).filter(Boolean);
+                const expected = (q.answers || []).slice().sort();
+                correct = given.slice().sort().join(",") === expected.join(",");
+                studentText = given.map(l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? c.l : l; }).join(", ") || "—";
+                correctText = expected.map(l => { const c = q.choices.find(ch => ch.l.toLowerCase() === l); return c ? c.l : l; }).join(", ");
+
+            } else if (q.type === "fill") {
+                const parts = studentRaw.split("/");
+                correct = q.vars && q.vars.every((v, i) => parts[i] === v.answer);
+                studentText = q.vars ? q.vars.map((v, i) => "[" + v.key + "]=" + (parts[i] || "—")).join(", ") : studentRaw;
+                correctText = q.vars ? q.vars.map(v => "[" + v.key + "]=" + v.answer).join(", ") : "";
+            }
+        }
+
+        return {
+            num: idx + 1,
+            text: q.q,
+            type: q.type,
+            section: q.section || "",
+            correct,
+            skipped,
+            studentText,
+            correctText,
+        };
+    });
+
+    return { moduleId, label, icon, score, total, date, temps, auto, questions };
 }
 
 // ══════════════════════════════════════════════════════════════
 //  APPEL DEEPSEEK via OpenRouter
 // ══════════════════════════════════════════════════════════════
 async function reportCallDeepSeek(prenom, nom, modules, apiKey) {
-  const totalScore = modules.reduce((s, m) => s + (m.score || 0), 0);
-  const totalMax   = modules.reduce((s, m) => s + (m.total || 20), 0);
-  const globalPct  = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
+    const totalScore = modules.reduce((s, m) => s + (m.score || 0), 0);
+    const totalMax = modules.reduce((s, m) => s + (m.total || 20), 0);
+    const globalPct = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
 
-  // Construire le résumé détaillé par module
-  const modulesSummary = modules.map(m => {
-    const pct     = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
-    const wrong   = (m.questions || []).filter(q => !q.correct && !q.skipped);
-    const skipped = (m.questions || []).filter(q => q.skipped);
+    // Construire le résumé détaillé par module
+    const modulesSummary = modules.map(m => {
+        const pct = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
+        const wrong = (m.questions || []).filter(q => !q.correct && !q.skipped);
+        const skipped = (m.questions || []).filter(q => q.skipped);
 
-    let txt = "\n### " + m.label + " : " + m.score + "/" + m.total + " (" + pct + "%)\n";
-    txt += "Date : " + m.date + " | Durée : " + m.temps + "\n";
+        let txt = "\n### " + m.label + " : " + m.score + "/" + m.total + " (" + pct + "%)\n";
+        txt += "Date : " + m.date + " | Durée : " + m.temps + "\n";
 
-    if (wrong.length > 0) {
-      txt += "Questions incorrectes (" + wrong.length + ") :\n";
-      wrong.slice(0, 10).forEach(q => {
-        txt += "- Q" + q.num;
-        if (q.section) txt += " [" + q.section + "]";
-        txt += " : « " + q.text.substring(0, 90) + (q.text.length > 90 ? "…" : "") + " »\n";
-        txt += "  ↳ Répondu : " + q.studentText + "\n";
-        txt += "  ✓ Correct : " + q.correctText + "\n";
-      });
-    } else if (m.questions.length > 0) {
-      txt += "✓ Toutes les questions correctes.\n";
-    }
+        if (wrong.length > 0) {
+            txt += "Questions incorrectes (" + wrong.length + ") :\n";
+            wrong.slice(0, 10).forEach(q => {
+                txt += "- Q" + q.num;
+                if (q.section) txt += " [" + q.section + "]";
+                txt += " : « " + q.text.substring(0, 90) + (q.text.length > 90 ? "…" : "") + " »\n";
+                txt += "  ↳ Répondu : " + q.studentText + "\n";
+                txt += "  ✓ Correct : " + q.correctText + "\n";
+            });
+        } else if (m.questions.length > 0) {
+            txt += "✓ Toutes les questions correctes.\n";
+        }
 
-    if (skipped.length > 0) {
-      txt += "Non répondues : " + skipped.map(q => "Q" + q.num).join(", ") + "\n";
-    }
+        if (skipped.length > 0) {
+            txt += "Non répondues : " + skipped.map(q => "Q" + q.num).join(", ") + "\n";
+        }
 
-    if (m.questions.length === 0 && m.rawAnswers) {
-      txt += "(Détail des réponses non disponible localement)\n";
-    }
+        if (m.questions.length === 0 && m.rawAnswers) {
+            txt += "(Détail des réponses non disponible localement)\n";
+        }
 
-    return txt;
-  }).join("\n");
+        return txt;
+    }).join("\n");
 
-  const prompt = `Tu es un expert pédagogique spécialisé dans la préparation aux concours de grandes écoles de commerce françaises (concours SESAME).
+    const prompt = `Tu es un expert pédagogique spécialisé dans la préparation aux concours de grandes écoles de commerce françaises (concours SESAME).
 Ton rôle est d'analyser les résultats d'un candidat et de produire un rapport d'évaluation personnalisé, professionnel et bienveillant, entièrement en français.
 
 ═══ DONNÉES DU CANDIDAT ═══
@@ -207,80 +207,80 @@ Réponds UNIQUEMENT avec le JSON pur — aucun texte autour, aucune balise markd
   "encouragement": "Message d'encouragement personnalisé, chaleureux et motivant (4-5 phrases), qui reconnaît les efforts du candidat et l'encourage à persévérer en vue du concours SESAME"
 }`;
 
-  const response = await fetch(REPORT_OR_URL, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + apiKey,
-      "Content-Type":  "application/json",
-      "HTTP-Referer":  window.location.origin,
-      "X-Title":       "SESAME Exam Platform"
-    },
-    body: JSON.stringify({
-      model:       REPORT_DEEPSEEK,
-      max_tokens:  2500,
-      temperature: 0.72,
-      messages:    [{ role: "user", content: prompt }]
-    })
-  });
+    const response = await fetch(REPORT_OR_URL, {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + apiKey,
+            "Content-Type": "application/json",
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "SESAME Exam Platform"
+        },
+        body: JSON.stringify({
+            model: REPORT_DEEPSEEK,
+            max_tokens: 2500,
+            temperature: 0.72,
+            messages: [{ role: "user", content: prompt }]
+        })
+    });
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || "Erreur HTTP " + response.status);
-  }
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || "Erreur HTTP " + response.status);
+    }
 
-  const result = await response.json();
-  const raw    = result.choices?.[0]?.message?.content || "{}";
+    const result = await response.json();
+    const raw = result.choices?.[0]?.message?.content || "{}";
 
-  try {
-    const clean = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-    return JSON.parse(clean);
-  } catch(e) {
-    console.warn("[SESAME Report] Parsing JSON IA échoué, fallback texte brut :", raw);
-    return {
-      synthese_globale:    raw,
-      points_forts:        [],
-      points_amelioration: [],
-      analyse_modules:     {},
-      recommandations:     [],
-      encouragement:       ""
-    };
-  }
+    try {
+        const clean = raw.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+        return JSON.parse(clean);
+    } catch (e) {
+        console.warn("[SESAME Report] Parsing JSON IA échoué, fallback texte brut :", raw);
+        return {
+            synthese_globale: raw,
+            points_forts: [],
+            points_amelioration: [],
+            analyse_modules: {},
+            recommandations: [],
+            encouragement: ""
+        };
+    }
 }
 
 // ══════════════════════════════════════════════════════════════
 //  RENDU HTML — ouvre une nouvelle fenêtre print-ready
 // ══════════════════════════════════════════════════════════════
 function reportRenderWindow(prenom, nom, modules, analysis) {
-  const totalScore = modules.reduce((s, m) => s + (m.score || 0), 0);
-  const totalMax   = modules.reduce((s, m) => s + (m.total || 20), 0);
-  const globalPct  = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
-  const today      = new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+    const totalScore = modules.reduce((s, m) => s + (m.score || 0), 0);
+    const totalMax = modules.reduce((s, m) => s + (m.total || 20), 0);
+    const globalPct = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
+    const today = new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
 
-  const scoreColor = globalPct >= 75 ? "#2e8b6e" : globalPct >= 50 ? "#c0700a" : "#e8533a";
+    const scoreColor = globalPct >= 75 ? "#2e8b6e" : globalPct >= 50 ? "#c0700a" : "#e8533a";
 
-  // Base URL pour charger core/report.css depuis la nouvelle fenêtre
-  const baseHref = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
+    // Base URL pour charger core/report.css depuis la nouvelle fenêtre
+    const baseHref = window.location.href.substring(0, window.location.href.lastIndexOf("/") + 1);
 
-  // ── Cartes de scores par module ──
-  const scoreCells = modules.map(m => {
-    const pct = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
-    const c   = pct >= 75 ? "#2e8b6e" : pct >= 50 ? "#c0700a" : "#e8533a";
-    return `<div class="score-card">
+    // ── Cartes de scores par module ──
+    const scoreCells = modules.map(m => {
+        const pct = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
+        const c = pct >= 75 ? "#2e8b6e" : pct >= 50 ? "#c0700a" : "#e8533a";
+        return `<div class="score-card">
       <div class="score-module-icon">${m.icon}</div>
       <div class="score-module-name">${m.label}</div>
       <div class="score-value" style="color:${c}">${m.score}/${m.total}</div>
       <div class="score-bar-bg"><div class="score-bar-fill" style="width:${pct}%;background:${c}"></div></div>
     </div>`;
-  }).join("");
+    }).join("");
 
-  // ── Détail par module ──
-  const modulesHTML = modules.map(m => {
-    const pct         = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
-    const wrong       = (m.questions || []).filter(q => !q.correct && !q.skipped);
-    const skipped     = (m.questions || []).filter(q => q.skipped);
-    const modAnalysis = analysis.analyse_modules?.[m.moduleId] || "";
+    // ── Détail par module ──
+    const modulesHTML = modules.map(m => {
+        const pct = m.total > 0 ? Math.round((m.score / m.total) * 100) : 0;
+        const wrong = (m.questions || []).filter(q => !q.correct && !q.skipped);
+        const skipped = (m.questions || []).filter(q => q.skipped);
+        const modAnalysis = analysis.analyse_modules?.[m.moduleId] || "";
 
-    const wrongRows = wrong.map(q => `
+        const wrongRows = wrong.map(q => `
       <tr>
         <td class="q-num">Q${q.num}</td>
         <td class="q-text">${reportEsc(q.text.substring(0, 100))}${q.text.length > 100 ? "…" : ""}</td>
@@ -288,7 +288,7 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
         <td class="q-correct">${reportEsc(q.correctText)}</td>
       </tr>`).join("");
 
-    return `
+        return `
     <div class="module-section">
       <div class="module-header">
         <div>
@@ -297,7 +297,7 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
         </div>
         <div class="module-score-block">
           <div class="module-score">${m.score}<span class="module-total">/${m.total}</span></div>
-          <div class="module-pct" style="color:${pct>=75?"#2e8b6e":pct>=50?"#c0700a":"#e8533a"}">${pct}%</div>
+          <div class="module-pct" style="color:${pct >= 75 ? "#2e8b6e" : pct >= 50 ? "#c0700a" : "#e8533a"}">${pct}%</div>
         </div>
       </div>
       ${modAnalysis ? `<div class="module-analysis">${reportEsc(modAnalysis)}</div>` : ""}
@@ -309,19 +309,19 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
           <tbody>${wrongRows}</tbody>
         </table>
       </div>` : m.questions.length > 0 ? `<div class="all-correct">✓ Toutes les questions correctement répondues pour ce module.</div>` : ""}
-      ${skipped.length > 0 ? `<div class="skipped-note">⚠ Questions non répondues : ${skipped.map(q => "Q"+q.num).join(", ")}</div>` : ""}
+      ${skipped.length > 0 ? `<div class="skipped-note">⚠ Questions non répondues : ${skipped.map(q => "Q" + q.num).join(", ")}</div>` : ""}
     </div>`;
-  }).join("");
+    }).join("");
 
-  // ── Listes IA ──
-  const toUL = arr => (arr || []).map(p => `<li>${reportEsc(p)}</li>`).join("");
-  const toRec = arr => (arr || []).map((r, i) => `
+    // ── Listes IA ──
+    const toUL = arr => (arr || []).map(p => `<li>${reportEsc(p)}</li>`).join("");
+    const toRec = arr => (arr || []).map((r, i) => `
     <div class="rec-item">
-      <div class="rec-num">${i+1}</div>
+      <div class="rec-num">${i + 1}</div>
       <div>${reportEsc(r)}</div>
     </div>`).join("");
 
-  const html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
@@ -422,20 +422,20 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
 </body>
 </html>`;
 
-  const w = window.open("", "_blank", "width=960,height=760,scrollbars=yes,resizable=yes");
-  if (!w) {
-    showToast("Popup bloquée — autorisez les popups pour ce site.", "error");
-    return;
-  }
-  w.document.write(html);
-  w.document.close();
+    const w = window.open("", "_blank", "width=960,height=760,scrollbars=yes,resizable=yes");
+    if (!w) {
+        showToast("Popup bloquée — autorisez les popups pour ce site.", "error");
+        return;
+    }
+    w.document.write(html);
+    w.document.close();
 }
 
 // Échapper le HTML pour éviter les injections dans le rapport
 function reportEsc(str) {
-  return String(str || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
 }
