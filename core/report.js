@@ -25,7 +25,7 @@ const REPORT_MODULE_LABELS = {
 //  POINT D'ENTRÉE — appelé depuis le bouton admin
 // ══════════════════════════════════════════════════════════════
 async function generateCandidateReport(candidateId, prenom, nom) {
-    const apiKey = localStorage.setItem("REPORT_OR_KEY");
+    const apiKey = localStorage.getItem("REPORT_OR_KEY");
     if (!apiKey) {
         showToast("Clé OpenRouter manquante — configurez-la dans Paramètres.", "error");
         return;
