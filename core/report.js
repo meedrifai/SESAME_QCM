@@ -403,7 +403,7 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
 
   <!-- ══ PIED DE PAGE ══ -->
   <footer class="report-footer">
-    <div>SESAME Exam Platform · Rapport généré automatiquement via DeepSeek</div>
+    <div>SESAME Exam Platform · Rapport Résultats</div>
     <div>${prenom} ${nom} · ${today}</div>
   </footer>
 
