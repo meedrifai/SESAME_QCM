@@ -202,7 +202,7 @@ Réponds UNIQUEMENT avec le JSON pur — aucun texte autour, aucune balise markd
   ],
   "encouragement": "Message d'encouragement personnalisé, chaleureux et motivant (4-5 phrases), qui reconnaît les efforts du candidat et l'encourage à persévérer en vue du concours SESAME"
 }`;
-
+    console.log("API KEY =", apiKey);
     const response = await fetch(REPORT_OR_URL, {
         method: "POST",
         headers: {
@@ -423,8 +423,16 @@ function reportRenderWindow(prenom, nom, modules, analysis) {
         showToast("Popup bloquée — autorisez les popups pour ce site.", "error");
         return;
     }
-    w.document.write(html);
-    w.document.close();
+    const doc = w.document;
+    try {
+        const parser = new DOMParser();
+        const parsed = parser.parseFromString(html, "text/html");
+        const imported = doc.importNode(parsed.documentElement, true);
+        doc.replaceChild(imported, doc.documentElement);
+    } catch (err) {
+        console.warn("[SESAME Report] Impossible de parser le HTML du rapport :", err);
+        doc.body.innerHTML = html;
+    }
 }
 
 // Échapper le HTML pour éviter les injections dans le rapport
